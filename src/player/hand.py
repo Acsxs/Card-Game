@@ -22,7 +22,7 @@ class Hand(EventBroadcaster):
         for card in card_indices:
             self.discard(card)
 
-    def play(self, card_queue, card_index, target, position):
+    def play(self, card_queue, energy, card_index, target, position):
         self.cards[card_index].target = target
         card_queue.submit(self.cards[card_index], position)
         self.discard(card_index)

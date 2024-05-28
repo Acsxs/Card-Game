@@ -1,4 +1,5 @@
 from events import *
+from player.player import Player
 
 
 class Card(EventBroadcaster):
@@ -16,7 +17,7 @@ class Card(EventBroadcaster):
     def __init__(self, event_handler, name, cost=0, shield=0, heal=0, damage=0, effects=(), meta=()):
         EventBroadcaster.__init__(self, event_handler)
         self.name = name
-        self.base = {
+        self.base_attributes = {
             'cost': cost,
             'shield': shield,
             'heal': heal,
@@ -36,20 +37,21 @@ class Card(EventBroadcaster):
         queue.append(self)
 
     def calculate(self, dtype):
-        result = self.base[dtype]
+        result = self.base_attributes[dtype]
         for function in self.modifiers[dtype]:
             result = function(result)
         return result
 
     def apply_card_effects(self):
+        target = 'Player' if issubclass(self.target, Player) else 'Enemy'
         if self.calculate('damage') != 0:
-            self.broadcast_event(Event("CardAttackTarget", (self.calculate('damage'), self.target)))
+            self.broadcast_event(Event(f"CardAttack{target}", (self.calculate('damage'), self.target)))
 
         if (self.calculate('shield') != 0) and (self.calculate('heal') != 0):
-            self.broadcast_event(Event("CardDefendTarget", (self.calculate('shield'), self.calculate('heal'), self.target)))
+            self.broadcast_event(Event(f"CardDefend{target}", (self.calculate('shield'), self.calculate('heal'), self.target)))
 
         if len(self.calculate('effects')) != 0:
-            self.broadcast_event(Event("CardEffectTarget", (self.calculate('effects'), self.target)))
+            self.broadcast_event(Event(f"CardEffect{target}", (self.calculate('effects'), self.target)))
 
         if len(self.calculate('meta')) != 0:
             self.broadcast_event(Event("CardMetaEffectCard", self.calculate('meta')))

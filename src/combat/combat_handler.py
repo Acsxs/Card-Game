@@ -13,3 +13,6 @@ class Combat:
         self.enemy.start_turn(self.player.player)
         self.player.start_turn()
 
+    def end_turn(self):
+        self.player.end_turn()
+
