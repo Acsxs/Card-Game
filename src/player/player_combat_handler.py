@@ -25,19 +25,19 @@ class PlayerCombatHandler(EventBroadcaster, EventListener):
         self.hand.draw_slice(self.deck.pick_slice(0, self.starting_draw-1))
 
     def start_turn(self):
-        self.broadcast_event(Event("PlayerStartTurn"))
+        self.broadcast(Event("PlayerStartTurn"))
         self.shield = 0
         self.energy = 5
         self.hand.draw(self.deck.pick(0))
 
     def end_turn(self):
-        self.broadcast_event(Event("PlayerEndTurn"))
+        self.broadcast(Event("PlayerEndTurn"))
 
     def select_card(self, index):
         self.selected_card = index
 
     def play_card(self, target, position):
-        self.hand.play(self.card_queue, self.selected_card, target, position)
+        self.hand.play(self.card_queue, self, self.selected_card, target, position)
 
     def parse_event(self, event):
         if event.type == 'CardAttackPlayer':

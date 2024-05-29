@@ -14,5 +14,7 @@ class Deck(EventBroadcaster):
         return self.cards.pop(index)
 
     def pick_slice(self, start, stop, step=1):
-        return [self.pick(index) for index in range(start, stop, step)]
+        if stop > len(self.cards)-1:
+            stop = len(self.cards)-1
+        return [self.pick(0) for index in range(start, stop, step)]
 

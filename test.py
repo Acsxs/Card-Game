@@ -24,4 +24,6 @@
 #
 # print(a.mod)
 
-print(list(range(10)))
+a={}
+a['s']=1
+print(a)

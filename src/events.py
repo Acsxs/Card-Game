@@ -16,6 +16,8 @@ class EventListener:
         self.event_handler = event_handler
         self.listening_to = listening_to
         for event in self.listening_to:
+            if event not in self.event_handler.listeners.keys():
+                self.event_handler.listeners[event] = []
             self.event_handler.listeners[event].append(self)
 
     def parse_event(self, event):
@@ -26,8 +28,8 @@ class EventBroadcaster:
     def __init__(self, event_handler):
         self.event_handler = event_handler
 
-    def broadcast_event(self, event):
-        self.event_handler.broadcast(event)
+    def broadcast(self, event):
+        self.event_handler.resolve(event)
 
 
 class EventHandler:
