@@ -36,7 +36,7 @@ class Card(EventBroadcaster):
         return result
 
     def apply_card_effects(self):
-        target = 'Player' if issubclass(self.target, Player) else 'Enemy'
+        target = 'Player' if issubclass(type(self.target), Player) else 'Enemy'
         if self.calculate('damage') != 0:
             self.broadcast(Event(f"CardAttack{target}", (self.calculate('damage'), self.target)))
 

@@ -18,3 +18,9 @@ class Deck(EventBroadcaster):
             stop = len(self.cards)-1
         return [self.pick(0) for index in range(start, stop, step)]
 
+    def shuffle_discard(self, discard):
+        self.cards = discard.cards.copy()
+        discard.clear()
+        self.shuffle()
+
+

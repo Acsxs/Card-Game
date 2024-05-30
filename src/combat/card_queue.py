@@ -20,6 +20,7 @@ class CardQueue:
                 continue
             card.apply_card_effects()
             self.queue[index] = None
+        self.open = [i for i in range(self.queue_length)]
 
     def to_string(self):
         return str([card.name if isinstance(card, Card) else card for card in self.queue])

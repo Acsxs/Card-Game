@@ -36,6 +36,8 @@ class EventHandler:
     listeners = {}
 
     def resolve(self, event):
+        # print(self.listeners)
+        # print(event.type, event.content)
         if not (event.type in self.listeners.keys()):
             return
         for listener in self.listeners[event.type]:

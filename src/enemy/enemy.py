@@ -20,6 +20,8 @@ class Enemy(EventBroadcaster, EventListener):
         return random.choice(['attack', 'defence'])
 
     def submit_intent(self, player):
+        if len(self.card_queue.open) <= 0:
+            return
         if self.get_intent() == 'attack':
             card = Card(self.event_handler,"Enemy Attack", 0, 0,0, random.randint(self.damage_range[0], self.damage_range[1]))
             card.target = player
@@ -36,7 +38,7 @@ class Enemy(EventBroadcaster, EventListener):
     def parse_event(self, event):
         if event.content[1] != self:
             return
-        if event.type == 'CardAttackPlayer':
+        if event.type == 'CardAttackEnemy':
             unshielded = event.content[0] - self.shield
             if unshielded < 0:
                 self.shield = -unshielded
@@ -44,10 +46,10 @@ class Enemy(EventBroadcaster, EventListener):
             self.health -= unshielded
             self.shield = 0
             return
-        elif event.type == 'CardDefendPlayer':
+        elif event.type == 'CardDefendEnemy':
             self.shield += event.content[0]
             self.health += event.content[1]
             return
-        elif event.type == 'CardEffectPlayer':
+        elif event.type == 'CardEffectEnemy':
             self.effects.append_effects(event.content[0])
 
