@@ -20,12 +20,13 @@ surface = pygame.image.load("data/assets/cards/Common Lightning.png")
 
 rect = pygame.Rect(40, 297, 300, 120)
 
-def blit_text(surface, text, rect:pygame.Rect, font_, default_size, color=pygame.Color('black')):
+
+def blit_text(surface, text, rect: pygame.Rect, font_, default_size, color=pygame.Color('black')):
     words = text.split(' ')  # 2D array where each row is a list of words.
     max_width, max_height = rect.size
     run = True
     lines = [""]
-    size = default_size+1
+    size = default_size + 1
     while run:
         size -= 1
         font1 = pygame.font.SysFont(font_, size)

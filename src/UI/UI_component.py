@@ -10,7 +10,10 @@ class UIComponent:
         self.surface = pygame.Surface(size)
         self.rect = self.surface.get_rect()
 
-    def draw(self, surface):
+    def draw(self, surface, pos=None):
+        if pos is not None:
+            surface.blit(self.surface, pos)
+            return
         surface.blit(self.surface, self.rect)
 
     def clear(self):

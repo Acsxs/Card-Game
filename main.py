@@ -11,8 +11,8 @@ pygame.display.set_caption("Test")
 
 image = pygame.image.load("data/assets/cards/Common Lightning.png")
 
-card = CardUIComponent((342, 479), image, 2, "Lightning", "Deal 2 Damage, Temporarily stuns the enemy, disabling it from using attacking moves for the turn.")
-
+card = CardUIComponent((342, 479), image, 2, "Lightning", "Deal 2 Damage, Temporarily stuns the enemy, disabling it "
+                                                          "from using attacking moves for the turn.")
 
 run = True
 while run:
@@ -20,7 +20,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
     screen.fill((255, 255, 255))
-    card.draw(screen)
+    card.draw(screen, (300,50))
     pygame.display.update()
 pygame.quit()
 sys.exit()
