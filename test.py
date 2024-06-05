@@ -7,7 +7,7 @@ SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 600
 font = pygame.font.SysFont('Minecraft', 40)
 cost = font.render("2", 0, (0, 0, 0))
-name = font.render("Lightning", 0, (0, 0, 0))
+name = "Lightning"
 # font = pygame.font.SysFont('Minecraft', 26)
 description = "Deal 2 Damage, Temporarily stuns the enemy, disabling it from using attacking moves for the turn."
 # text.fill((255,0,0))
@@ -61,7 +61,7 @@ while run:
     screen.fill((255, 255, 255))
     screen.blit(surface, (0, 0))
     screen.blit(cost, (64, 58))
-    screen.blit(name, (115, 59))
+    blit_text(surface, name, pygame.Rect(115, 59, 200, 40), "Minecraft", 40)
     blit_text(surface, description, rect, "Minecraft", 26)
     pygame.display.update()
 pygame.quit()
