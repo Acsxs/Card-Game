@@ -41,7 +41,7 @@ while running:
     # Get mouse position
     mouse_pos = pygame.mouse.get_pos()
 
-    # Fill screen with white
+    # Fill screen with black
     screen.fill(BLACK)
 
     # Change button color on hover
