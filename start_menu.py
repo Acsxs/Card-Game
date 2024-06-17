@@ -3,10 +3,10 @@ import sys
 
 
 class Button:
-    def __init__(self, colour, rect, text=None, border_radius=20):
-        self.text = text or pygame.font.SysFont('Arial', 36).render('', True, (0, 0, 0))
-        self.colour = colour
+    def __init__(self, button_colour, rect, text=None, border_radius=20):
+        self.colour = button_colour
         self.rect = rect
+        self.text = text or pygame.font.SysFont('Arial', 36).render('', True, (0, 0, 0))
         self.text_rect = self.text.get_rect(center=self.rect.center)
         self.border_radius = border_radius
 
