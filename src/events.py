@@ -12,9 +12,9 @@ class Event:
 class EventListener:
     listening_to = []
 
-    def __init__(self, event_handler, listening_to):
+    def __init__(self, event_handler, listening_to=None):
         self.event_handler = event_handler
-        self.listening_to = listening_to
+        self.listening_to += listening_to or []
         for event in self.listening_to:
             if event not in self.event_handler.listeners.keys():
                 self.event_handler.listeners[event] = []

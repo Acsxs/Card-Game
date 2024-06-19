@@ -27,6 +27,7 @@ class Hand(EventBroadcaster):
         return str([card.name for card in self.cards])
 
     def play(self, card_queue, player, card_index, target, position):
+        # print(self.cards)
         if player.energy - self.cards[card_index].calculate('cost') <= 0:
             return None
         self.cards[card_index].target = target

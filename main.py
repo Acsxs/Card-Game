@@ -6,6 +6,7 @@ from combat.combat_handler import Combat
 player = Player()
 
 event_handler = EventHandler()
+#test
 
 card1 = Card(event_handler, "Attack", 1, 0, 0, 4)
 card2 = Card(event_handler, "Defence", 1, 4, 0, 0)
@@ -34,3 +35,4 @@ while combat.enemy.health > 0:
     combat.card_queue.play()
 
 print("You Win")
+
