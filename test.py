@@ -3,6 +3,7 @@ import sys
 import numpy as np
 from src.UI.card_UI_component import CardUIComponent
 
+# Initialize Pygame
 pygame.init()
 
 clock = pygame.time.Clock()
@@ -27,5 +28,6 @@ while run:
     card.draw(screen,(0,0))
 
     pygame.display.update()
+
 pygame.quit()
 sys.exit()
