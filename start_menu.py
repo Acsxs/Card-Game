@@ -5,25 +5,28 @@ from UI.button import *
 pygame.init()
 
 # Constants
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1200, 600
+WHITE = (255, 255, 255)
 
 # Screen setup
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Start Menu Test')
 
-button_surf1 = pygame.Surface((250, 50))
-button_surf1.fill((255, 255, 255))
-button_surf2 = pygame.Surface((250, 50))
-button_surf2.fill((255, 255, 255))
-button_surf3 = pygame.Surface((250, 50))
-button_surf3.fill((255, 255, 255))
-button_surf4 = pygame.Surface((250, 50))
-button_surf4.fill((255, 255, 255))
-button_surf5 = pygame.Surface((400, 100))
-button_surf5.fill((255, 255, 255))
+button_surf1 = pygame.Surface((250, 50), pygame.SRCALPHA)
+button_surf1.fill(pygame.Color(175, 175, 175))
+button_surf2 = pygame.Surface((250, 50), pygame.SRCALPHA)
+button_surf2.fill(pygame.Color(175, 175, 175))
+button_surf3 = pygame.Surface((250, 50), pygame.SRCALPHA)
+button_surf3.fill(pygame.Color(175, 175, 175))
+button_surf4 = pygame.Surface((250, 50), pygame.SRCALPHA)
+button_surf4.fill(pygame.Color(175, 175, 175))
+
 
 # Font setup
-font = pygame.font.SysFont('Arial', 36)
+font = pygame.font.SysFont('Arial', 36, bold=False)
+
+text_surface = font.render('Card Game', True, WHITE, None)
+text_rect = text_surface.get_rect(center=(WIDTH//2, 75))
 
 button_text1 = font.render('Settings', True, (0, 0, 0))
 button_text_rect1 = button_text1.get_rect(center=button_surf1.get_rect().center)
@@ -37,16 +40,14 @@ button_surf3.blit(button_text3, button_text_rect3)
 button_text4 = font.render('Start', True, (0, 0, 0))
 button_text_rect4 = button_text4.get_rect(center=button_surf4.get_rect().center)
 button_surf4.blit(button_text4, button_text_rect4)
-button_text5 = font.render('Card Game', True, (0, 0, 0))
-button_text_rect5 = button_text5.get_rect(center=button_surf5.get_rect().center)
-button_surf5.blit(button_text5, button_text_rect5)
+
 
 button1 = Button(button_surf1, (50, 450), lambda: print("Settings"))
 button2 = Button(button_surf2, (50, 375), lambda: print("Card Encyclopedia"))
 button3 = Button(button_surf3, (50, 525), lambda: print("Quit"))
 button4 = Button(button_surf4, (50, 300), lambda: print("Start"))
-button5 = Button(button_surf5, (200, 50), lambda: print("Card Game"))
-button_group = ButtonGroup((WIDTH, HEIGHT), button1, button2, button3, button4, button5)
+
+button_group = ButtonGroup((WIDTH, HEIGHT), button1, button2, button3, button4)
 
 # Main loop
 clock = pygame.time.Clock()
@@ -59,6 +60,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             button_group.on_click(event.pos)
     screen.fill((0, 0, 0))
+    screen.blit(text_surface, text_rect)
     button_group.render(screen)
 
     pygame.display.flip()
