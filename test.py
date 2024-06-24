@@ -1,58 +1,45 @@
 import pygame
 import sys
+from UI.card_UI_component import CardUIComponent
+from UI.UI_component import UIComponent
+from consts import *
+import numpy as np
+
+class PlayingBoard(UIComponent):
+    def __init__(self):
+        super().__init__()
+        self.card_slot_surface = pygame.transform.scale(pygame.image.load("data/assets/card-slot.png"), CARD_SLOT_SIZE)
+        self.playing_board_surface = pygame.Surface((CARD_SLOT_SIZE[0]*CARD_SLOTS+10, CARD_SLOT_SIZE[1]))
+        for i in range(CARD_SLOTS+1):
+            self.playing_board_surface.blit(self.card_slot_surface, (CARD_SLOT_SIZE[0]*i, 0))
+
+        # self.playing_board_surface = pygame.transform.scale(pygame.image.load("data/assets/Playing Board.png"), (SCREEN_WIDTH, SCREEN_HEIGHT // 2))
+        self.surface = self.playing_board_surface.copy()
+        self.rect = self.surface.get_rect()
+        self.cards = [] # CardUIComponent
+
+    def update_surf(self):
+        self.surface = self.playing_board_surface.copy()
+        for index, card in enumerate(self.cards):
+            card.draw(self.surface, CARD_POSITIONS[index])
+
+    def draw(self, surface, pos=None):
+        self.update_surf()
+        surface.blit(self.surface, pos if pos is not None else self.rect)
+
 
 pygame.init()
-
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 600
-font = pygame.font.SysFont('Minecraft', 40)
-cost = font.render("2", 0, (0, 0, 0))
-name = "Lightning"
-# font = pygame.font.SysFont('Minecraft', 26)
-description = "Deal 2 Damage, Temporarily stuns the enemy, disabling it from using attacking moves for the turn."
-# text.fill((255,0,0))
+playing_board = PlayingBoard()
+card1 = CardUIComponent(CARD_SIZE, pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
+playing_board.cards.append(card1)
+font = pygame.font.SysFont('Minecraft', 80)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Test")
 
-surface = pygame.image.load("data/assets/cards/Common Lightning.png")
-# surface_transformed = pygame.transform.scale(surface, (184, 165))
-
-rect = pygame.Rect(40, 297, 300, 120)
-
-
-def blit_text(surface, text, rect: pygame.Rect, font_, default_size, color=pygame.Color('black')):
-    words = text.split(' ')  # 2D array where each row is a list of words.
-    max_width, max_height = rect.size
-    run = True
-    lines = [""]
-    size = default_size + 1
-    while run:
-        size -= 1
-        font1 = pygame.font.SysFont(font_, size)
-        space = font1.size(' ')[0]  # The width of a space.
-        lines = [""]
-        index = 0
-        x, y = (0, 0)
-        for word in words:
-            word_surface = font1.render(word, 0, color)
-            word_width, word_height = word_surface.get_size()
-            if x + word_width + space >= max_width:
-                x = rect.topleft[0]  # Reset the x.
-                y += word_height  # Start on new row.
-                index += 1
-                lines.append("")
-            lines[index] += word + " "
-            x += word_width + space
-        if y <= rect.height:
-            run = False
-    x, y = rect.topleft
-    for line in lines:
-        text = font1.render(line, 0, color)
-        surface.blit(text, (rect.left, y))
-        y += text.get_size()[1]
-    return text
-
+# indicator = StaminaIndicator(None, (100, 300), (20, 10))
+# indicator.update_surf((50, 50))
+# rect = pygame.Rect(40, 297, 300, 120)
 
 run = True
 while run:
@@ -60,10 +47,10 @@ while run:
         if event.type == pygame.QUIT:
             run = False
     screen.fill((255, 255, 255))
-    screen.blit(surface, (0, 0))
-    screen.blit(cost, (64, 58))
-    blit_text(surface, name, pygame.Rect(115, 59, 200, 40), "Minecraft", 40)
-    blit_text(surface, description, rect, "Minecraft", 26)
+    # indicator.draw(screen)
+    playing_board.draw(screen, (0, SCREEN_HEIGHT // 2))
+    # card1.draw(screen, (297, 413))
+
     pygame.display.update()
 pygame.quit()
 sys.exit()

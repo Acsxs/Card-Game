@@ -5,7 +5,7 @@ class Hand(EventBroadcaster):
 
     def __init__(self, event_handler, cards=None):
         EventBroadcaster.__init__(self, event_handler)
-        self.cards = cards or []
+        self.cards = cards if cards is not None else []
 
     def draw(self, card):
         self.cards.append(card)

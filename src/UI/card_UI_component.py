@@ -17,24 +17,24 @@ class CardUIComponent(UIComponent):
 
     def update_card(self):
         # Cost Rendering
-        font = pygame.font.SysFont('Minecraft', 40)
-        cost_surface = font.render(str(self.cost), 0, (0, 0, 0))
-        self.card.blit(cost_surface, (64, 58))
+        self.blit_text(str(self.cost), pygame.Rect(64,58,40,40), "Minecraft",40)
 
         # Name Rendering
         self.blit_text(self.name, pygame.Rect(115, 59, 200, 40), "Minecraft", 40)
 
         # Description Rendering
         self.blit_text(self.description, pygame.Rect(40, 297, 300, 120), "Minecraft", 40)
-
         self.surface = pygame.transform.scale(self.card, self.size)
 
-    def blit_text(self, text, rect: pygame.Rect, font_, default_size, color=pygame.Color('black')):
+    def draw(self, surface, pos=None):
+        surface.blit(self.surface, pos if pos is not None else self.rect)
+
+    def blit_text(self, text, rect: pygame.Rect, font_, max_size, color=pygame.Color('black')):
         words = text.split(' ')  # 2D array where each row is a list of words.
         max_width, max_height = rect.size
         run = True
         lines = [""]
-        size = default_size + 1
+        size = max_size + 1
         while run:
             size -= 1
             font1 = pygame.font.SysFont(font_, size)
