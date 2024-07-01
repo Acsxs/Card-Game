@@ -4,11 +4,24 @@ from UI.card_UI_component import CardUIComponent
 from consts import *
 import numpy as np
 from UI.hand_UI_component import HandUIComponent
-
-
+from UI.button import Button
+from UI.mouse_tracker import MouseTrackerGroup
+from UI.floating_card import FloatingCard
 
 
 pygame.init()
+
+
+#
+# b1 = pygame.Surface((200,100))
+# b1.fill((0,0,0))
+#
+# b2 = pygame.Surface((200,100))
+# b2.fill((0,0,255))
+#
+# button1 = Button(b1, (20,50), lambda:print('je'))
+# button2 = Button(b2, (20, 300), lambda:print('ka'))
+# button_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), button1, button2)
 hand = HandUIComponent()
 card1 = CardUIComponent(CARD_SIZE, pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
 card2 = CardUIComponent(CARD_SIZE, pygame.image.load("data/assets/cards/Common Shield.png"), 1, "Shelid", "Does smthn i guess")
@@ -25,6 +38,10 @@ hand.cards.append(card2)
 hand.cards.append(card1)
 hand.cards.append(card2)
 
+# floating = FloatingCard((CARD_SIZE[0]*3, CARD_SIZE[1]*3), pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
+# card_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), floating)
+
+
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Test")
 
@@ -39,11 +56,18 @@ while run:
             run = False
     screen.fill((255, 255, 255))
     # indicator.draw(screen)
+
+    # button_group.draw(screen)
+    #
+    # button_group.update()
+    # card_group.draw(screen)
+    # card_group.update()
+
     mouse = pygame.mouse.get_pos()
-    hand.card_hover(mouse)
+    hand.update()
     hand.rect.topleft=(0, SCREEN_HEIGHT // 2)
     hand.draw(screen)
-    # card1.draw(screen, (297, 413))
+    card1.draw(screen, (297, 413))
 
     pygame.display.update()
 pygame.quit()

@@ -1,36 +1,48 @@
 from consts import *
 import numpy as np
+from UI.mouse_tracker import MouseTrackerGroup
+import time
 
-
-class HandUIComponent:
+class HandUIComponent(MouseTrackerGroup):
     def __init__(self):
-        self.surface = pygame.Surface((SCREEN_WIDTH * 3/5, CARD_SIZE[1] + CARD_PADDING), pygame.SRCALPHA)
+        self.surface = pygame.Surface((SCREEN_WIDTH * 3 / 5, CARD_SIZE[1] + CARD_PADDING), pygame.SRCALPHA)
+        super().__init__((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.rect = self.surface.get_rect()
         self.cards = []
         self.card_rects = []
-        self.highlight_surface = pygame.Surface((SCREEN_HEIGHT*10/52, SCREEN_HEIGHT/4), pygame.SRCALPHA)
+        self.selected_card = None
 
     def update_hand(self):
         self.surface.fill(NO_COLOUR)
         self.card_rects = []
-        card_offset = np.array(((self.rect.size[0]-CARD_SIZE[0]) / len(self.cards), 0))
-        card_offset = card_offset if card_offset[0] < CARD_SIZE[0] else np.array((CARD_SIZE[0]+1, 0))
+        card_offset = np.array(((self.rect.size[0] - CARD_SIZE[0]) / len(self.cards), 0))
+        card_offset = card_offset if card_offset[0] < CARD_SIZE[0] else np.array((CARD_SIZE[0] + 1, 0))
         for index, card in enumerate(self.cards):
-            self.card_rects.append(pygame.Rect(card_offset*index+self.rect.topleft, CARD_SIZE))
-            card.draw(self.surface, card_offset * index)
+            if card == self.selected_card:
+                continue
+            self.card_rects.append(pygame.Rect(card_offset * index + self.rect.topleft, CARD_SIZE))
+            card.rect.topleft = card_offset * index
+            card.draw(self.surface)
+
+    def check_click(self):
+        pressed = pygame.mouse.get_pressed()
+        if not (pressed[0] and not self.hold):
+            self.click_timer = 0
+            return
+        if self.click_timer == 0:
+            self.click_timer = time.perf_counter()
+        if 1e-6 < time.perf_counter() - self.click_timer < 0.15:
+            return
+        for tracker in self.trackers:
+            tracker.on_click()
+        mouse_pos = pygame.mouse.get_pos()
+        for card in list(reversed(self.cards)):
+            if card.rect.collidepoint(mouse_pos):
+                card.change_size((CARD_SIZE[0]*2, CARD_SIZE[1]*2))
+                self.selected_card = card
+                break
 
     def draw(self, surface, pos=None):
         self.update_hand()
         surface.blit(self.surface, pos if pos is not None else self.rect)
-        surface.blit(self.highlight_surface, self.highlight_surface.get_rect(center=surface.get_rect().center))
 
-    def card_hover(self, mouse_pos):
-        if not self.rect.collidepoint(mouse_pos):
-            return
-        for index, card_rects in reversed(list(enumerate(self.card_rects))):
-            card_hover = card_rects.collidepoint(mouse_pos)
-            if card_hover:
-                self.highlight_surface = self.cards[index].get_surface_at_scale((SCREEN_HEIGHT*10/28, SCREEN_HEIGHT/2))
-                return index
-        self.highlight_surface = pygame.Surface((SCREEN_HEIGHT*10/28, SCREEN_HEIGHT/2), pygame.SRCALPHA)
-        return False
