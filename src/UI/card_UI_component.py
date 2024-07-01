@@ -1,10 +1,10 @@
-from src.UI.UI_component import UIComponent
 import pygame
 
 
-class CardUIComponent(UIComponent):
+class CardUIComponent:
     def __init__(self, size, card, cost, name, description):
-        UIComponent.__init__(self, size)
+        self.surface = pygame.Surface(size)
+        self.rect = self.surface.get_rect()
         # card.blit()
         self.base_card = card
         self.cost = cost
@@ -28,6 +28,9 @@ class CardUIComponent(UIComponent):
 
     def draw(self, surface, pos=None):
         surface.blit(self.surface, pos if pos is not None else self.rect)
+
+    def get_surface_at_scale(self, size):
+        return pygame.transform.scale(self.card, size)
 
     def blit_text(self, text, rect: pygame.Rect, font_, max_size, color=pygame.Color('black')):
         words = text.split(' ')  # 2D array where each row is a list of words.

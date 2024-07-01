@@ -1,14 +1,15 @@
 import pygame
-from UI.UI_component import UIComponent
 
-class StaminaIndicator(UIComponent):
+
+class StaminaIndicator:
     health_value_surf = None
     shield_value_surf = None
     health_final = None
     shield_final = None
 
     def __init__(self, master, bottom_left, stamina):
-        super().__init__((350,200))
+        self.surface = pygame.Surface((350,200))
+        self.rect = self.surface.get_rect()
         self.master = master
         self.stamina = stamina
         self.rect = self.surface.get_rect(bottomleft=bottom_left)

@@ -1,38 +1,29 @@
 import pygame
 import sys
 from UI.card_UI_component import CardUIComponent
-from UI.UI_component import UIComponent
 from consts import *
 import numpy as np
+from UI.hand_UI_component import HandUIComponent
 
-class PlayingBoard(UIComponent):
-    def __init__(self):
-        super().__init__()
-        self.card_slot_surface = pygame.transform.scale(pygame.image.load("data/assets/card-slot.png"), CARD_SLOT_SIZE)
-        self.playing_board_surface = pygame.Surface((CARD_SLOT_SIZE[0]*CARD_SLOTS+10, CARD_SLOT_SIZE[1]))
-        for i in range(CARD_SLOTS+1):
-            self.playing_board_surface.blit(self.card_slot_surface, (CARD_SLOT_SIZE[0]*i, 0))
 
-        # self.playing_board_surface = pygame.transform.scale(pygame.image.load("data/assets/Playing Board.png"), (SCREEN_WIDTH, SCREEN_HEIGHT // 2))
-        self.surface = self.playing_board_surface.copy()
-        self.rect = self.surface.get_rect()
-        self.cards = [] # CardUIComponent
-
-    def update_surf(self):
-        self.surface = self.playing_board_surface.copy()
-        for index, card in enumerate(self.cards):
-            card.draw(self.surface, CARD_POSITIONS[index])
-
-    def draw(self, surface, pos=None):
-        self.update_surf()
-        surface.blit(self.surface, pos if pos is not None else self.rect)
 
 
 pygame.init()
-playing_board = PlayingBoard()
+hand = HandUIComponent()
 card1 = CardUIComponent(CARD_SIZE, pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
-playing_board.cards.append(card1)
-font = pygame.font.SysFont('Minecraft', 80)
+card2 = CardUIComponent(CARD_SIZE, pygame.image.load("data/assets/cards/Common Shield.png"), 1, "Shelid", "Does smthn i guess")
+hand.cards.append(card1)
+hand.cards.append(card2)
+hand.cards.append(card1)
+hand.cards.append(card2)
+hand.cards.append(card1)
+hand.cards.append(card2)
+hand.cards.append(card1)
+hand.cards.append(card2)
+hand.cards.append(card1)
+hand.cards.append(card2)
+hand.cards.append(card1)
+hand.cards.append(card2)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Test")
@@ -48,7 +39,10 @@ while run:
             run = False
     screen.fill((255, 255, 255))
     # indicator.draw(screen)
-    playing_board.draw(screen, (0, SCREEN_HEIGHT // 2))
+    mouse = pygame.mouse.get_pos()
+    hand.card_hover(mouse)
+    hand.rect.topleft=(0, SCREEN_HEIGHT // 2)
+    hand.draw(screen)
     # card1.draw(screen, (297, 413))
 
     pygame.display.update()
