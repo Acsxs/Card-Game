@@ -26,4 +26,8 @@ class FloatingCard(CardUIComponent, MouseTracker):
     def change_size(self, new_size):
         self.size = new_size
         self.surface = pygame.Surface(new_size)
-        self.rect = self.surface.get_rect(topleft = self.rect.topleft)
+        self.update_card()
+        self.rect = self.surface.get_rect(topleft=self.rect.topleft)
+
+    def copy(self):
+        return FloatingCard(self.size, self.card, self.cost, self.name, self.description)

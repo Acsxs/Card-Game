@@ -11,20 +11,20 @@ class MouseTracker:
             self.rect = rect
         else:
             raise NotImplemented
-        self.hover = False
         self.mask = mask or pygame.mask.Mask(self.rect.size)
 
     def on_click(self):
         pass
 
     def on_hover(self, mouse_pos):
-        if self.rect.collidepoint(*mouse_pos):
-            self.hover = True
-            return
-        self.hover = False
+        pass
+
+    def on_mouse_up(self):
+        pass
 
     def on_hold(self):
         pass
+
 
 class MouseTrackerGroup:
     def __init__(self, screen_size, *args):
@@ -36,12 +36,18 @@ class MouseTrackerGroup:
         self.click_timer = 0
         self.previous_pos = (0, 0)
         self.hold_threshold = 0.15
+        self.hover = None
         for tracker in self.trackers:
             self.mask.draw(tracker.mask, tracker.rect.topleft)
 
     def add(self, tracker):
         self.trackers.append(tracker)
         self.mask.draw(tracker.mask, tracker.rect.topleft)
+
+    def redraw_mask(self):
+        self.mask.clear()
+        for tracker in self.trackers:
+            self.mask.draw(tracker.mask, tracker.rect.topleft)
 
     def check_click(self):
         pressed = pygame.mouse.get_pressed()
@@ -52,24 +58,34 @@ class MouseTrackerGroup:
             self.click_timer = time.perf_counter()
         if 1e-6 < time.perf_counter() - self.click_timer < 0.15:
             return
-        for tracker in self.trackers:
-            tracker.on_click()
+        if self.hover is not None:
+            self.hover.on_click()
+
+    def on_mouse_up(self):
+        if self.hover is not None:
+            self.hover.on_mouse_up()
 
     def check_hover(self, mouse_pos):
-        if 0>mouse_pos[0]>self.size[0] or 0 > mouse_pos[1] > self.size[1]:
+        if 0 > mouse_pos[0] > self.size[0] or 0 > mouse_pos[1] > self.size[1]:
+            self.hover = None
             return
         if self.mask.get_at(mouse_pos) == 0:
+            self.hover = None
             return
         for tracker in self.trackers:
-            tracker.on_hover(mouse_pos) # make this a var and only call when on 
+            if tracker.rect.collidepoint(*mouse_pos):
+                self.hover = tracker
+                tracker.on_hover(mouse_pos)
+                break
 
     def check_hold(self):
         pressed = pygame.mouse.get_pressed()
         if self.hold is True:
             if not pressed[0]:
+                self.on_mouse_up()
                 self.hold = False
-            for tracker in self.trackers:
-                tracker.on_hold()
+            if self.hover is not None:
+                self.hover.on_hold()
         if pressed[0] and self.hold_timer == 0:
             self.hold_timer = time.perf_counter()
             return

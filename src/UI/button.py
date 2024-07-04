@@ -11,8 +11,7 @@ class Button(MouseTracker):
         super().__init__(rect=self.rect, mask=self.mask)
 
     def on_click(self):
-        if self.hover:
-            self.command()
+        self.command()
 
     def draw(self, surface):
         surface.blit(self.surface,self.rect)

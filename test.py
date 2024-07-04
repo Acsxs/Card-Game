@@ -12,7 +12,7 @@ from UI.floating_card import FloatingCard
 pygame.init()
 
 
-#
+
 # b1 = pygame.Surface((200,100))
 # b1.fill((0,0,0))
 #
@@ -22,21 +22,22 @@ pygame.init()
 # button1 = Button(b1, (20,50), lambda:print('je'))
 # button2 = Button(b2, (20, 300), lambda:print('ka'))
 # button_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), button1, button2)
+
 hand = HandUIComponent()
-card1 = CardUIComponent(CARD_SIZE, pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
-card2 = CardUIComponent(CARD_SIZE, pygame.image.load("data/assets/cards/Common Shield.png"), 1, "Shelid", "Does smthn i guess")
-hand.cards.append(card1)
-hand.cards.append(card2)
-hand.cards.append(card1)
-hand.cards.append(card2)
-hand.cards.append(card1)
-hand.cards.append(card2)
-hand.cards.append(card1)
-hand.cards.append(card2)
-hand.cards.append(card1)
-hand.cards.append(card2)
-hand.cards.append(card1)
-hand.cards.append(card2)
+card1 = FloatingCard(CARD_SIZE, pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
+card2 = FloatingCard(CARD_SIZE, pygame.image.load("data/assets/cards/Common Shield.png"), 1, "Shelid", "Does smthn i guess")
+hand.add(card1.copy())
+hand.add(card2.copy())
+hand.add(card1.copy())
+hand.add(card2.copy())
+hand.add(card1.copy())
+hand.add(card2.copy())
+hand.add(card1.copy())
+hand.add(card2.copy())
+hand.add(card1.copy())
+hand.add(card2.copy())
+hand.add(card1.copy())
+hand.add(card2.copy())
 
 # floating = FloatingCard((CARD_SIZE[0]*3, CARD_SIZE[1]*3), pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
 # card_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), floating)
@@ -58,16 +59,17 @@ while run:
     # indicator.draw(screen)
 
     # button_group.draw(screen)
-    #
     # button_group.update()
+
     # card_group.draw(screen)
     # card_group.update()
 
-    mouse = pygame.mouse.get_pos()
+    # mouse = pygame.mouse.get_pos()
     hand.update()
     hand.rect.topleft=(0, SCREEN_HEIGHT // 2)
+    hand.redraw_mask()
     hand.draw(screen)
-    card1.draw(screen, (297, 413))
+    # card1.draw(screen, (297, 413))
 
     pygame.display.update()
 pygame.quit()
