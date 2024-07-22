@@ -1,6 +1,51 @@
 import time
-from consts import SCREEN_WIDTH, SCREEN_HEIGHT
+from consts import SCREEN_WIDTH, SCREEN_HEIGHT, HOLD_WINDOW
 import pygame
+
+
+class Mouse:
+    button_states = [0, 0, 0]
+    """
+    keydown: 0001
+    keyup: 0010
+    hold: 0100
+    none:1000
+    """
+    pos = []
+    hold_window = HOLD_WINDOW
+    button_hold_timers = [0, 0, 0]
+
+    def update(self):
+        mouse_buttons = pygame.mouse.get_pressed()
+        current_time = time.perf_counter()
+        for index, button_state in enumerate(mouse_buttons):
+            current_button = self.button_states[index]
+            if current_button == 2 and button_state is True:
+                break
+            if self.button_hold_timers[index] or current_button == (2-int(button_state)) :
+                self.button_states[index] = 8
+                break
+            if (current_button and 10) != 0 and button_state is True:
+                self.button_states[index] = 1
+            if (current_button and 5) != 0 and button_state is False:
+                self.button_states[index] = 2
+                break
+            if (cu)
+
+            if self.button_states[index] == 1 and button:
+                self.button_hold_timers[index] = current_time
+                self.button_states[index] = 3
+                break
+            if current_time-self.button_hold_timers[index] > HOLD_WINDOW:
+                self.button_states[index] = 2
+                break
+            if self.button_states[index] is False and button:
+                self.button_states[index] = 1
+
+
+
+
+
 
 
 class MouseTracker:
@@ -90,11 +135,10 @@ class MouseTrackerGroup:
             self.hold_timer = time.perf_counter()
             return
         if pressed[0]:
-            if time.perf_counter()-self.hold_timer > 0.15:
+            if time.perf_counter() - self.hold_timer > 0.15:
                 self.hold = True
             return
         self.hold_timer = 0
-
 
     def update(self):
         self.check_hold()
