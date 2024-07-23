@@ -15,6 +15,7 @@ class Enemy(EventBroadcaster, EventListener):
         self.damage_range = damage_range
         self.shielding_range = shielding_range
         self.card_queue = card_queue
+        self.modifiers = {'attack': [a], 'defence': []}
 
     def get_intent(self):
         return random.choice(['attack', 'defence'])
@@ -52,4 +53,5 @@ class Enemy(EventBroadcaster, EventListener):
             return
         elif event.type == 'CardEffectEnemy':
             self.effects.append_effects(event.content[0])
+
 
