@@ -6,42 +6,45 @@ import pygame
 class Mouse:
     button_states = [0, 0, 0]
     """
-    keydown: 0001
-    keyup: 0010
-    hold: 0100
-    none:1000
+    keydown: 1
+    keyup: 2
+    hold: 3
+    none: 0
     """
     pos = []
     hold_window = HOLD_WINDOW
-    button_hold_timers = [0, 0, 0]
+    button_hold_timers = [None, None, None]
 
     def update(self):
+        self.pos = pygame.mouse.get_pos()
         mouse_buttons = pygame.mouse.get_pressed()
         current_time = time.perf_counter()
         for index, button_state in enumerate(mouse_buttons):
             current_button = self.button_states[index]
-            if current_button == 2 and button_state is True:
-                break
-            if self.button_hold_timers[index] or current_button == (2-int(button_state)) :
-                self.button_states[index] = 8
-                break
-            if (current_button and 10) != 0 and button_state is True:
+            if current_button == 3 and button_state is True:
+                continue
+            if self.button_hold_timers[index] is not None:
+                if 1e-6 < current_time-self.button_hold_timers[index] < 0.15 and button_state is True:
+                    self.button_states[index] = 0
+                    continue
+                elif button_state is False:
+                    self.button_states[index] = 2
+                    self.button_hold_timers[index]=None
+                    continue
+                if current_button == 0 and button_state is True and current_time - self.button_hold_timers[index] >= 0.15:
+                    self.button_states[index] = 3
+                    continue
+            if (current_button == 2 or current_button == 0) and button_state is True:
                 self.button_states[index] = 1
-            if (current_button and 5) != 0 and button_state is False:
+                self.button_hold_timers[index] = time.perf_counter()
+                continue
+            if (current_button == 1 or current_button == 3) and button_state is False:
                 self.button_states[index] = 2
-                break
-            if (cu)
-
-            if self.button_states[index] == 1 and button:
-                self.button_hold_timers[index] = current_time
-                self.button_states[index] = 3
-                break
-            if current_time-self.button_hold_timers[index] > HOLD_WINDOW:
-                self.button_states[index] = 2
-                break
-            if self.button_states[index] is False and button:
-                self.button_states[index] = 1
-
+                self.button_hold_timers[index] = None
+                continue
+            if current_button == 1 or current_button == 2:
+                self.button_states[index] = 0
+                continue
 
 
 
@@ -58,7 +61,7 @@ class MouseTracker:
             raise NotImplemented
         self.mask = mask or pygame.mask.Mask(self.rect.size)
 
-    def on_click(self):
+    def on_mouse_down(self):
         pass
 
     def on_hover(self, mouse_pos):
@@ -72,15 +75,11 @@ class MouseTracker:
 
 
 class MouseTrackerGroup:
-    def __init__(self, screen_size, *args):
+    def __init__(self, screen_size, mouse, *args):
         self.trackers = list(args)
         self.size = screen_size
         self.mask = pygame.Mask(screen_size)
-        self.hold = False
-        self.hold_timer = 0
-        self.click_timer = 0
-        self.previous_pos = (0, 0)
-        self.hold_threshold = 0.15
+        self.mouse = mouse
         self.hover = None
         for tracker in self.trackers:
             self.mask.draw(tracker.mask, tracker.rect.topleft)
@@ -94,27 +93,16 @@ class MouseTrackerGroup:
         for tracker in self.trackers:
             self.mask.draw(tracker.mask, tracker.rect.topleft)
 
-    def check_click(self):
-        pressed = pygame.mouse.get_pressed()
-        if not (pressed[0] and not self.hold):
-            self.click_timer = 0
-            return
-        if self.click_timer == 0:
-            self.click_timer = time.perf_counter()
-        if 1e-6 < time.perf_counter() - self.click_timer < 0.15:
-            return
+    def on_mouse_down(self):
         if self.hover is not None:
-            self.hover.on_click()
+            self.hover.on_mouse_down()
 
     def on_mouse_up(self):
         if self.hover is not None:
             self.hover.on_mouse_up()
 
     def check_hover(self, mouse_pos):
-        if 0 > mouse_pos[0] > self.size[0] or 0 > mouse_pos[1] > self.size[1]:
-            self.hover = None
-            return
-        if self.mask.get_at(mouse_pos) == 0:
+        if 0 > mouse_pos[0] > self.size[0] or 0 > mouse_pos[1] > self.size[1] or self.mask.get_at(mouse_pos) == 0:
             self.hover = None
             return
         for tracker in self.trackers:
@@ -123,27 +111,20 @@ class MouseTrackerGroup:
                 tracker.on_hover(mouse_pos)
                 break
 
-    def check_hold(self):
-        pressed = pygame.mouse.get_pressed()
-        if self.hold is True:
-            if not pressed[0]:
-                self.on_mouse_up()
-                self.hold = False
-            if self.hover is not None:
-                self.hover.on_hold()
-        if pressed[0] and self.hold_timer == 0:
-            self.hold_timer = time.perf_counter()
-            return
-        if pressed[0]:
-            if time.perf_counter() - self.hold_timer > 0.15:
-                self.hold = True
-            return
-        self.hold_timer = 0
+    def on_hold(self):
+        for tracker in self.trackers:
+            tracker.on_hold()
+
 
     def update(self):
-        self.check_hold()
-        self.check_click()
-        self.check_hover(mouse_pos=pygame.mouse.get_pos())
+        self.mouse.update()
+        self.check_hover(mouse_pos=self.mouse.pos)
+        if self.mouse.button_states[0] == 2:
+            self.on_mouse_up()
+        if self.mouse.button_states[0] == 1:
+            self.on_mouse_down()
+        if self.mouse.button_states[0] == 3:
+            self.on_hold()
 
     def draw(self, surface):
         for tracker in self.trackers:
