@@ -21,6 +21,7 @@ class PlayerCombatHandler:
         self.hand = Hand()
         self.discard = Discard()
         self.effects = EffectEnum(initial_effects)
+        self.modifiers = {'attack': [a], 'defence': [d]}
 
     def start_combat(self):
         self.deck.shuffle()

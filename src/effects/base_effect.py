@@ -28,6 +28,6 @@ class EffectEnum:
 
     def tick_counters(self):
         for index in range(len(self.iterable)):
-            self.iterable[index].stack -= 1
+            # self.iterable[index].stack -= 1
             if self.iterable[index].stack <= 0:
                 self.iterable.pop(index)
