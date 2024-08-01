@@ -8,8 +8,8 @@ player = Player()
 event_handler = EventHandler()
 #test
 
-card1 = Card(event_handler, "Attack", 1, 0, 0, 4)
-card2 = Card(event_handler, "Defence", 1, 4, 0, 0)
+card1 = Card("Attack", 1, 0, 0, 4)
+card2 = Card("Defence", 1, 4, 0, 0)
 
 player.inventory.cards.append(card1)
 player.inventory.cards.append(card1)
@@ -20,7 +20,7 @@ player.inventory.cards.append(card2)
 player.inventory.cards.append(card2)
 player.inventory.cards.append(card2)
 
-combat = Combat(event_handler, player)
+combat = Combat(player)
 
 
 while combat.enemy.health > 0:

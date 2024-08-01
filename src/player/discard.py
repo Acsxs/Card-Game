@@ -1,11 +1,8 @@
 from events import EventBroadcaster
 
 
-class Discard(EventBroadcaster):
+class Discard:
     cards = []
-
-    def __init__(self, event_handler):
-        EventBroadcaster.__init__(self, event_handler)
 
     def discard(self, card):
         self.cards.append(card)
