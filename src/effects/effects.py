@@ -1,9 +1,9 @@
 from effects.base_effect import Effect
 
 
-
 class Poison(Effect):
     type = "poison"
+
     def __init__(self, stack):
         super().__init__()
         self.stack = stack
@@ -78,7 +78,7 @@ class Poison(Effect):
 
     def apply (self, target):
         target.poison -= self.stack
-        poison = lambda health: int(1 * stack)
+        poison = lambda health: int(1 * self.stack)
         target.modifiers['health'].append(poison)
         self.stack -= 1
 
@@ -94,4 +94,18 @@ class Strength(Effect):
         target.attack -= self.stack
         strength = lambda damage: int(1.25 * damage)
         target.modifiers['attack'].append(strength)
+        self.stack -= 1
+
+
+class Health_Pool(Effect):
+    type = "health_pool"
+
+    def __init__(self, stack):
+        super().__init__()
+        self.stack = stack
+
+    def apply(self, target):
+        target.health_pool -= self.stack
+        health_pool = lambda health: (self.stack + health)
+        target.modifiers['health'].append(health_pool)
         self.stack -= 1
