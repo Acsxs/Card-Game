@@ -1,6 +1,6 @@
 import pygame, sys
 from UI.button import Button
-from UI.mouse_tracker import Mouse, MouseTrackerGroup
+from input.mouse_tracker import Mouse, MouseTrackerGroup
 from consts import *
 from functools import partial
 

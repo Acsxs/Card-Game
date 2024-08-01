@@ -75,10 +75,10 @@ class MouseTracker:
 
 
 class MouseTrackerGroup:
-    def __init__(self, screen_size, mouse, *args):
+    def __init__(self, mouse, *args):
         self.trackers = list(args)
-        self.size = screen_size
-        self.mask = pygame.Mask(screen_size
+        self.size = (SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.mask = pygame.Mask(self.size)
         self.mouse = mouse
         self.hover = None
         for tracker in self.trackers:

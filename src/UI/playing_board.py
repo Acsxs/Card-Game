@@ -1,7 +1,4 @@
-import pygame
-
 from consts import *
-from UI.mouse_tracker import MouseTrackerGroup
 
 
 class PlayingBoard:

@@ -26,7 +26,7 @@ class CardUIComponent:
         self.blit_text(self.description, pygame.Rect(40, 297, 300, 120), "Minecraft", 40)
         self.surface = pygame.transform.scale(self.card, self.size)
 
-        def draw(self, surface, pos=None):
+    def draw(self, surface, pos=None):
         surface.blit(self.surface, pos if pos is not None else self.rect)
 
     def get_surface_at_scale(self, size):

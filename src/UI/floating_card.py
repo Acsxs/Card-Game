@@ -2,7 +2,7 @@ import pygame.mask
 
 from UI.card_UI_component import CardUIComponent
 from collections.abc import Iterable
-from UI.mouse_tracker import MouseTracker
+from input.mouse_tracker import MouseTracker
 
 
 class FloatingCard(CardUIComponent, MouseTracker):

@@ -1,5 +1,5 @@
 import pygame
-from UI.mouse_tracker import MouseTracker
+from input.mouse_tracker import MouseTracker
 
 
 class Button(MouseTracker):

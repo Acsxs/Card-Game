@@ -1,4 +1,4 @@
-from UI.mouse_tracker import MouseTrackerGroup
+from input.mouse_tracker import MouseTrackerGroup
 from UI.playing_board import PlayingBoard
 from UI.hand_UI_component import HandUIComponent
 from consts import *

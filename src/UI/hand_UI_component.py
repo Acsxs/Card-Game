@@ -2,8 +2,6 @@ import pygame.draw
 
 from consts import *
 import numpy as np
-from UI.mouse_tracker import MouseTrackerGroup
-import time
 
 
 class HandUIComponent:
