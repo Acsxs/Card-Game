@@ -15,3 +15,4 @@ class Button(MouseTracker):
 
     def draw(self, surface):
         surface.blit(self.surface,self.rect)
+
