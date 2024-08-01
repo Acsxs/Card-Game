@@ -7,11 +7,9 @@ from UI.hand_UI_component import HandUIComponent
 from UI.button import Button
 from UI.mouse_tracker import MouseTrackerGroup, Mouse
 from UI.floating_card import FloatingCard
-
-
+from UI.playing_board import PlayingBoard
+from UI.player_UI_controller import PlayerUIController
 pygame.init()
-
-
 
 # b1 = pygame.Surface((200,100))
 # b1.fill((0,0,0))
@@ -23,21 +21,12 @@ pygame.init()
 # button2 = Button(b2, (20, 300), lambda:print('ka'))
 # button_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), button1, button2)
 mouse = Mouse()
-hand = HandUIComponent(mouse)
-card1 = FloatingCard(CARD_SIZE, pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
-card2 = FloatingCard(CARD_SIZE, pygame.image.load("data/assets/cards/Common Shield.png"), 1, "Shelid", "Does smthn i guess")
-hand.add(card1.copy())
-hand.add(card2.copy())
-hand.add(card1.copy())
-hand.add(card2.copy())
-hand.add(card1.copy())
-hand.add(card2.copy())
-hand.add(card1.copy())
-hand.add(card2.copy())
-hand.add(card1.copy())
-hand.add(card2.copy())
-hand.add(card1.copy())
-hand.add(card2.copy())
+player_ui = PlayerUIController(mouse)
+card1 = FloatingCard(HAND_CARD_SIZE, pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
+card2 = FloatingCard(HAND_CARD_SIZE, pygame.image.load("data/assets/cards/Common Shield.png"), 1, "Shield", "Does smthn i guess")
+for i in range(6):
+    player_ui.hand_ui.cards.append(card1.copy())
+    player_ui.hand_ui.cards.append(card2.copy())
 
 # floating = FloatingCard((CARD_SIZE[0]*3, CARD_SIZE[1]*3), pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
 # card_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), floating)
@@ -63,11 +52,14 @@ while run:
     # card_group.update()
 
     # mouse = pygame.mouse.get_pos()
-    hand.update()
-    hand.rect.topleft=(0, SCREEN_HEIGHT // 2)
-    hand.redraw_mask()
-    hand.draw(screen)
+    # playing_board.draw(screen)
+    # for i in playing_board.get_slot_centres():
+    #     pygame.draw.circle(screen, (255, 0, 0), i, 5)
+    # # hand.rect.topleft=(0, SCREEN_HEIGHT // 2)
+    # hand.draw(screen)
     # card1.draw(screen, (297, 413))
+    mouse.update()
+    player_ui.draw(screen)
 
     pygame.display.update()
 pygame.quit()

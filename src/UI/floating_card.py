@@ -11,10 +11,6 @@ class FloatingCard(CardUIComponent, MouseTracker):
         MouseTracker.__init__(self, rect=self.rect, mask=pygame.mask.from_surface(self.surface))
         self.offset = (0, 0)
 
-    def on_click(self):
-        mouse_pos = pygame.mouse.get_pos()
-        self.offset = self.rect.topleft[0] - mouse_pos[0], self.rect.topleft[1] - mouse_pos[1]
-
     def on_hold(self):
         mouse_pos = pygame.mouse.get_pos()
         self.rect.topleft = mouse_pos[0] + self.offset[0], mouse_pos[1] + self.offset[1]
@@ -27,7 +23,7 @@ class FloatingCard(CardUIComponent, MouseTracker):
         self.size = new_size
         self.surface = pygame.Surface(new_size)
         self.update_card()
-        self.rect = self.surface.get_rect(topleft=self.rect.topleft)
+        self.rect = self.surface.get_rect(center=self.rect.center)
 
     def copy(self):
         return FloatingCard(self.size, self.card, self.cost, self.name, self.description)

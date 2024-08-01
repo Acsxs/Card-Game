@@ -75,10 +75,10 @@ class MouseTracker:
 
 
 class MouseTrackerGroup:
-    def __init__(self, screen_size, mouse, *args):
+    def __init__(self, mouse, *args):
         self.trackers = list(args)
-        self.size = screen_size
-        self.mask = pygame.Mask(screen_size)
+        self.size = (SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.mask = pygame.Mask(self.size)
         self.mouse = mouse
         self.hover = None
         for tracker in self.trackers:
@@ -87,6 +87,11 @@ class MouseTrackerGroup:
     def add(self, tracker):
         self.trackers.append(tracker)
         self.mask.draw(tracker.mask, tracker.rect.topleft)
+
+
+    def remove(self, tracker):
+        self.trackers.remove(tracker)
+        self.redraw_mask()
 
     def redraw_mask(self):
         self.mask.clear()
@@ -115,9 +120,7 @@ class MouseTrackerGroup:
         for tracker in self.trackers:
             tracker.on_hold()
 
-
     def update(self):
-        self.mouse.update()
         self.check_hover(mouse_pos=self.mouse.pos)
         if self.mouse.button_states[0] == 2:
             self.on_mouse_up()
