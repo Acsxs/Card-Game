@@ -15,6 +15,7 @@ class Enemy:
         self.damage_range = damage_range
         self.shielding_range = shielding_range
         self.card_queue = card_queue
+        self.modifiers = {'attack': [a], 'defence': []}
 
     def get_intent(self):
         return random.choice(['attack', 'defence'])
@@ -55,3 +56,4 @@ class Enemy:
         for transformation in self.outgoing_modifiers:
             modified_attributes *= transformation
         return modified_attributes
+
