@@ -2,7 +2,6 @@ from events import *
 
 
 class Hand:
-
     def __init__(self,  cards=None):
         self.cards = cards or []
 

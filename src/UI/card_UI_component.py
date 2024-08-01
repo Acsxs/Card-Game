@@ -1,10 +1,10 @@
-from src.UI.UI_component import UIComponent
 import pygame
 
 
-class CardUIComponent(UIComponent):
+class CardUIComponent:
     def __init__(self, size, card, cost, name, description):
-        UIComponent.__init__(self, size)
+        self.surface = pygame.Surface(size)
+        self.rect = self.surface.get_rect()
         # card.blit()
         self.base_card = card
         self.cost = cost
@@ -17,17 +17,21 @@ class CardUIComponent(UIComponent):
 
     def update_card(self):
         # Cost Rendering
-        font = pygame.font.SysFont('Minecraft', 40)
-        cost_surface = font.render(str(self.cost), 0, (0, 0, 0))
-        self.card.blit(cost_surface, (64, 58))
+        self.blit_text(str(self.cost), pygame.Rect(64,58,40,40), "Minecraft",40)
 
         # Name Rendering
         self.blit_text(self.name, pygame.Rect(115, 59, 200, 40), "Minecraft", 40)
 
         # Description Rendering
         self.blit_text(self.description, pygame.Rect(40, 297, 300, 120), "Minecraft", 40)
-
         self.surface = pygame.transform.scale(self.card, self.size)
+
+        def draw(self, surface, pos=None):
+        surface.blit(self.surface, pos if pos is not None else self.rect)
+
+    def get_surface_at_scale(self, size):
+        return pygame.transform.scale(self.card, size)
+
 
     def blit_text(self, text, rect: pygame.Rect, font_name, default_size, color=pygame.Color('black')):
         words = text.split(' ')

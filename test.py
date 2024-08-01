@@ -1,100 +1,66 @@
-import pygame, sys
+import pygame
+import sys
+from UI.card_UI_component import CardUIComponent
+from consts import *
+import numpy as np
+from UI.hand_UI_component import HandUIComponent
 from UI.button import Button
-
+from UI.mouse_tracker import MouseTrackerGroup, Mouse
+from UI.floating_card import FloatingCard
+from UI.playing_board import PlayingBoard
+from UI.player_UI_controller import PlayerUIController
 pygame.init()
 
-SCREEN = pygame.display.set_mode((1280, 720))
-pygame.display.set_caption("Menu")
+# b1 = pygame.Surface((200,100))
+# b1.fill((0,0,0))
+#
+# b2 = pygame.Surface((200,100))
+# b2.fill((0,0,255))
+#
+# button1 = Button(b1, (20,50), lambda:print('je'))
+# button2 = Button(b2, (20, 300), lambda:print('ka'))
+# button_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), button1, button2)
+mouse = Mouse()
+player_ui = PlayerUIController(mouse)
+card1 = FloatingCard(HAND_CARD_SIZE, pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
+card2 = FloatingCard(HAND_CARD_SIZE, pygame.image.load("data/assets/cards/Common Shield.png"), 1, "Shield", "Does smthn i guess")
+for i in range(6):
+    player_ui.hand_ui.cards.append(card1.copy())
+    player_ui.hand_ui.cards.append(card2.copy())
 
-BG = pygame.image.load("data/assets/background 2.png")
-
-
-def get_font(size):
-    return pygame.font.SysFont('Upheaval TT -BRK-', size)
-
-
-def play():
-    while True:
-        PLAY_MOUSE_POS = pygame.mouse.get_pos()
-
-        SCREEN.fill("black")
-
-        PLAY_TEXT = get_font(45).render("This is the PLAY screen.", True, "White")
-        PLAY_RECT = PLAY_TEXT.get_rect(center=(500, 250))
-        SCREEN.blit(PLAY_TEXT, PLAY_RECT)
-
-        PLAY_BACK = Button(pos=(500, 250))
-
-        PLAY_BACK.render(SCREEN)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BACK.on_click(PLAY_MOUSE_POS):
-                    main_menu()
-
-        pygame.display.update()
+# floating = FloatingCard((CARD_SIZE[0]*3, CARD_SIZE[1]*3), pygame.image.load("data/assets/cards/Common Lightning.png"), 1, "Lighting", "Does smthn i guess")
+# card_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), floating)
 
 
-def options():
-    while True:
-        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Test")
 
-        SCREEN.fill("white")
+# indicator = StaminaIndicator(None, (100, 300), (20, 10))
+# indicator.update_surf((50, 50))
+# rect = pygame.Rect(40, 297, 300, 120)
+run = True
+while run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+    screen.fill((255, 255, 255))
+    # indicator.draw(screen)
 
-        OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black")
-        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(500, 250))
-        SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
+    # button_group.draw(screen)
+    # button_group.update()
+    # card_group.draw(screen)
+    # card_group.update()
 
-        OPTIONS_BACK = Button(pos=(500, 250))
+    # mouse = pygame.mouse.get_pos()
+    # playing_board.draw(screen)
+    # for i in playing_board.get_slot_centres():
+    #     pygame.draw.circle(screen, (255, 0, 0), i, 5)
+    # # hand.rect.topleft=(0, SCREEN_HEIGHT // 2)
+    # hand.draw(screen)
+    # card1.draw(screen, (297, 413))
+    mouse.update()
+    player_ui.draw(screen)
 
-        OPTIONS_BACK.render(SCREEN)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if OPTIONS_BACK.on_click(OPTIONS_MOUSE_POS):
-                    main_menu()
-
-        pygame.display.update()
-
-
-def main_menu():
-    while True:
-        SCREEN.blit(BG, (0, 0))
-
-        MENU_MOUSE_POS = pygame.mouse.get_pos()
-
-        MENU_TEXT = get_font(100).render("Tower Master", True, "#b576e7")
-        MENU_RECT = MENU_TEXT.get_rect(center=(650, 100))
-
-        PLAY_BUTTON = Button(pygame.image.load("data/assets/Start Button.png"), pos=(500, 250))
-        OPTIONS_BUTTON = Button(pygame.image.load("data/assets/Setting Wheel.png"), pos=(1150, 580))
-        QUIT_BUTTON = Button(pygame.image.load("data/assets/Quit Button.png"), pos=(500, 450))
-
-        SCREEN.blit(MENU_TEXT, MENU_RECT)
-
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
-            button.render(SCREEN)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BUTTON.on_click(MENU_MOUSE_POS):
-                    play()
-                if OPTIONS_BUTTON.on_click(MENU_MOUSE_POS):
-                    options()
-                if QUIT_BUTTON.on_click(MENU_MOUSE_POS):
-                    pygame.quit()
-                    sys.exit()
-
-        pygame.display.update()
-
-
-main_menu()
+    pygame.display.update()
+pygame.quit()
+sys.exit()
