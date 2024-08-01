@@ -33,18 +33,6 @@ class Enemy:
         for i in range(random.randint(0, 3)):
             self.submit_intent(player)
 
-    def parse_event(self, event):
-        if event.content[1] != self:
-            return
-
-            return
-        elif event.type == 'CardDefendEnemy':
-            self.shield += event.content[0]
-            self.health += event.content[1]
-            return
-        elif event.type == 'CardEffectEnemy':
-            self.effects.append_effects(event.content[0])
-
     def receive_card_attributes(self, card_attributes):
         modified_attributes = card_attributes
         for transformation in self.incoming_modifiers:
