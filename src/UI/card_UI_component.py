@@ -26,40 +26,51 @@ class CardUIComponent:
         self.blit_text(self.description, pygame.Rect(40, 297, 300, 120), "Minecraft", 40)
         self.surface = pygame.transform.scale(self.card, self.size)
 
-    def draw(self, surface, pos=None):
+        def draw(self, surface, pos=None):
         surface.blit(self.surface, pos if pos is not None else self.rect)
 
     def get_surface_at_scale(self, size):
         return pygame.transform.scale(self.card, size)
 
-    def blit_text(self, text, rect: pygame.Rect, font_, max_size, color=pygame.Color('black')):
-        words = text.split(' ')  # 2D array where each row is a list of words.
+
+    def blit_text(self, text, rect: pygame.Rect, font_name, default_size, color=pygame.Color('black')):
+        words = text.split(' ')
+        words = [word + ' ' for word in words]
         max_width, max_height = rect.size
-        run = True
-        lines = [""]
-        size = max_size + 1
-        while run:
-            size -= 1
-            font1 = pygame.font.SysFont(font_, size)
-            space = font1.size(' ')[0]  # The width of a space.
+        size = default_size + 1
+        for font_size in reversed(range(size)):
             lines = [""]
-            index = 0
-            x, y = (0, 0)
-            for word in words:
-                word_surface = font1.render(word, 0, color)
-                word_width, word_height = word_surface.get_size()
-                if x + word_width + space >= max_width:
-                    x = rect.topleft[0]  # Reset the x.
-                    y += word_height  # Start on new row.
-                    index += 1
-                    lines.append("")
-                lines[index] += word + " "
-                x += word_width + space
-            if y <= rect.height:
-                run = False
+            font = pygame.font.SysFont(font_name, font_size)
+            word_surfaces = [font.render(word, 0, color) for word in words]
+            word_height = word_surfaces[0].get_size()[1]
+            word_widths = [word_surface.get_size()[0] for word_surface in word_surfaces]
+            previous=0
+            i=sum_binary_search(word_widths, max_width)
+            while i is not None:
+                lines.append(''.join(words[previous:i]))
+                previous = i
+                i = sum_binary_search(word_widths, max_width)
+            lines.append(''.join(words[previous:]))
+            total_height = word_height*len(lines)
+            if total_height <= max_height:
+                break
         x, y = rect.topleft
         for line in lines:
-            text = font1.render(line, 0, color)
+            text = font.render(line, 0, color)
             self.card.blit(text, (rect.left, y))
-            y += text.get_size()[1]
+            y += word_height
         return text
+
+
+def sum_binary_search(array, x):
+    range_ = [0, len(array)-1]
+    result = 0
+    while range_[0] <= range_[1]:
+        mid = sum(range_) // 2
+        if sum(array[:mid]) <= x:
+            if sum(array[:mid + 1]) > x:
+                return mid
+            range_[0] = mid + 1
+            continue
+        range_[1] = mid - 1
+    return

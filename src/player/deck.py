@@ -2,9 +2,8 @@ import random
 from events import *
 
 
-class Deck(EventBroadcaster):
-    def __init__(self, event_handler, cards):
-        EventBroadcaster.__init__(self, event_handler)
+class Deck:
+    def __init__(self, cards):
         self.cards = cards
 
     def shuffle(self):

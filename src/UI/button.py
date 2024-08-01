@@ -3,6 +3,7 @@ from UI.mouse_tracker import MouseTracker
 
 
 class Button(MouseTracker):
+
     def __init__(self, surface, pos, command=lambda: None):
         self.surface = surface
         self.rect = self.surface.get_rect(topleft=pos)
@@ -15,4 +16,5 @@ class Button(MouseTracker):
 
     def draw(self, surface):
         surface.blit(self.surface,self.rect)
+
 
