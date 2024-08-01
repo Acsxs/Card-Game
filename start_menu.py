@@ -44,7 +44,7 @@ button_surf4.blit(button_text4, button_text_rect4)
 
 button1 = Button(button_surf1, (50, 450), lambda: print("Settings"))
 button2 = Button(button_surf2, (50, 375), lambda: print("Card Encyclopedia"))
-button3 = Button(button_surf3, (50, 525), lambda: print("Quit"))
+button3 = Button(button_surf3, (50, 525), lambda: pygame.quit())
 button4 = Button(button_surf4, (50, 300), lambda: print("Start"))
 
 button_group = ButtonGroup((WIDTH, HEIGHT), button1, button2, button3, button4)
