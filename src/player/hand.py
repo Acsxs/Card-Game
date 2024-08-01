@@ -1,15 +1,12 @@
 from events import *
 
 
-class Hand(EventBroadcaster):
-
-    def __init__(self, event_handler, cards=None):
-        EventBroadcaster.__init__(self, event_handler)
+class Hand:
+    def __init__(self,  cards=None):
         self.cards = cards or []
 
     def draw(self, card):
         self.cards.append(card)
-        self.broadcast(Event("PlayerDrawCard"))
 
     def draw_slice(self, cards):
         for card in cards:
@@ -28,9 +25,5 @@ class Hand(EventBroadcaster):
 
     def play(self, card_queue, player, card_index, target, position):
         # print(self.cards)
-        if player.energy - self.cards[card_index].calculate('cost') <= 0:
-            return None
-        self.cards[card_index].target = target
-        player.energy -= self.cards[card_index].calculate('cost')
-        card_queue.submit(self.cards[card_index], position)
+        card_queue.submit(self.cards[card_index], player, target, position)
         return self.pick(card_index)
