@@ -1,4 +1,5 @@
 from effects.base_effect import Effect
+from attributes import AttributeTransformation
 
 
 class Poison(Effect):
@@ -10,91 +11,81 @@ class Poison(Effect):
 
     def apply(self, target):
         target.health -= self.stack
-        self.stack -= 1
 
 
 class Weakness(Effect):
     type = "weakness"
+    attribute_transformation = AttributeTransformation(damage=lambda damage: int(0.75 * damage))
 
     def __init__(self, stack):
         super().__init__()
         self.stack = stack
 
-    def apply(self, target):
-        target.attack -= self.stack
-        weakness = lambda damage: int(0.75 * damage)
-        target.modifiers['attack'].append(weakness)
-        self.stack -= 1
+    def start_effect(self, target):
+        target.outgoing_modifiers.append(self.attribute_transformation)
+
+    def end_effect(self, target):
+        target.outgoing_modifiers.remove(self.attribute_transformation)
 
 
 class Vulnerable(Effect):
     type = "vulnerable"
+    attribute_transformation = AttributeTransformation(shield=lambda shield: int(0.75 * shield))
 
     def __init__(self, stack):
         super().__init__()
         self.stack = stack
 
-    def apply(self, target):
-        target.vulnerable -= self.stack
-        vulnerable = lambda shield: int(0.75 * shield)
-        target.modifiers['shield'].append(vulnerable)
-        self.stack -= 1
+    def start_effect(self, target):
+        target.outgoing_modifiers.append(self.attribute_transformation)
+
+    def end_effect(self, target):
+        target.outgoing_modifiers.remove(self.attribute_transformation)
 
 
 class Immunity(Effect):
     type = "immunity"
+    attribute_transformation = AttributeTransformation(damage=lambda damage: 0)
 
     def __init__(self, stack):
         super().__init__()
         self.stack = stack
 
-    def apply(self, target):
-        target.immunity -= self.stack
-        immunity = lambda damage: int(0 * damage)
-        target.modifiers['damage'].append(immunity)
-        self.stack -= 1
+    def start_effect(self, target):
+        target.incoming_modifiers.append(self.attribute_transformation)
+
+    def end_effect(self, target):
+        target.incoming_modifiers.remove(self.attribute_transformation)
 
 
 class Stun(Effect):
     type = "stun"
+    attribute_transformation = AttributeTransformation(damage=lambda damage: 0)
 
     def __init__(self, stack):
         super().__init__()
         self.stack = stack
 
-    def apply(self, target):
-        target.stun -= self.stack
-        stun = lambda damage: int(0 * damage)
-        target.modifiers['attack'].append(stun)
-        self.stack -= 1
+    def start_effect(self, target):
+        target.outgoing_modifiers.append(self.attribute_transformation)
 
-
-class Poison(Effect):
-    type = "poison"
-
-    def __init__(self, stack):
-        super().__init__()
-        self.stack = stack
-
-    def apply (self, target):
-        target.poison -= self.stack
-        poison = lambda health: int(1 * self.stack)
-        target.modifiers['health'].append(poison)
-        self.stack -= 1
+    def end_effect(self, target):
+        target.outgoing_modifiers.remove(self.attribute_transformation)
 
 
 class Strength(Effect):
     type = "strength"
+    attribute_transformation = AttributeTransformation(damage=lambda damage: int(1.25 * damage))
 
     def __init__(self, stack):
         super().__init__()
         self.stack = stack
 
-    def apply(self, target):
-        target.attack -= self.stack
-        strength = lambda damage: int(1.25 * damage)
-        target.modifiers['attack'].append(strength)
-        self.stack -= 1
+    def start_effect(self, target):
+        target.outgoing_modifiers.append(self.attribute_transformation)
+
+    def end_effect(self, target):
+        target.outgoing_modifiers.remove(self.attribute_transformation)
 
 
 class Health_Pool(Effect):
@@ -105,7 +96,4 @@ class Health_Pool(Effect):
         self.stack = stack
 
     def apply(self, target):
-        target.health_pool -= self.stack
-        health_pool = lambda health: (self.stack + health)
-        target.modifiers['health'].append(health_pool)
-        self.stack -= 1
+        target.health_pool += self.stack

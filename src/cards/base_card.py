@@ -1,5 +1,5 @@
 from events import *
-from structs import Attributes
+from attributes import Attributes
 
 
 

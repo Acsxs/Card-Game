@@ -35,6 +35,9 @@ class PlayerUIController(MouseTrackerGroup):
             if self.playing_board.cards[index] is None:
                 self.playing_board.cards[index] = self.selected_card
                 self.selected_card.change_size(CARD_SIZE)
+            else:
+                self.hand_ui.cards.append(self.selected_card)
+                self.selected_card.change_size(HAND_CARD_SIZE)
         else:
             self.hand_ui.cards.append(self.selected_card)
             self.selected_card.change_size(HAND_CARD_SIZE)

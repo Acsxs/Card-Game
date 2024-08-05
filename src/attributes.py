@@ -1,9 +1,11 @@
-
-from dataclasses import dataclass
 from typing import Callable
 from typing import Collection
 
-@dataclass
+
+def no_transformation(x):
+    return x
+
+
 class AttributeTransformation:
     cost: Callable
     shield: Callable
@@ -12,7 +14,23 @@ class AttributeTransformation:
     effects: Callable
     other: Callable
 
-@dataclass
+    def __init__(
+            self,
+            cost=no_transformation,
+            shield=no_transformation,
+            heal=no_transformation,
+            damage=no_transformation,
+            effects=no_transformation,
+            other=no_transformation,
+    ):
+        self.cost = cost
+        self.shield = shield
+        self.heal = heal
+        self.damage = damage
+        self.effects = effects
+        self.other = other
+
+
 class Attributes:
     cost: int
     shield: int
@@ -20,6 +38,14 @@ class Attributes:
     damage: int
     effects: Collection[object]
     other: Collection[Callable]
+
+    def __init__(self, cost=0, shield=0, heal=0, damage=0, effects=(), other=(),):
+        self.cost = cost
+        self.shield = shield
+        self.heal = heal
+        self.damage = damage
+        self.effects = effects
+        self.other = other
 
     def __imul__(self, other):
         self.cost = other.cost(self.cost)

@@ -27,12 +27,11 @@ class PlayingBoard:
         return [(CARD_SLOT_CENTRE[0] + i * CARD_SLOT_SIZE[0] + self.rect.left, CARD_SLOT_CENTRE[1] + self.rect.top) for i in range(CARD_SLOTS)]
 
     def pick_card(self, mouse_pos):
-        for card in self.cards:
+        for index, card in enumerate(self.cards):
             if card is None:
                 continue
-            print(card.rect)
             if card.rect.collidepoint(mouse_pos):
-                self.cards.remove(card)
+                self.cards[index] = None
                 return card
 
     def draw(self, surface, pos=None):
