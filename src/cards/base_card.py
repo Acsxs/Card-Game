@@ -1,6 +1,4 @@
-from events import *
 from attributes import Attributes
-
 
 
 class Card:
@@ -18,3 +16,14 @@ class Card:
             + f"Defense: {self.base_attributes.shield}/{self.base_attributes.heal}\n" \
             + f"Effects: {self.base_attributes.effects}\n" \
             + f"other: {self.base_attributes.other}\n"
+
+    def copy(self):
+        return Card(
+            self.name,
+            self.base_attributes.cost,
+            self.base_attributes.shield,
+            self.base_attributes.heal,
+            self.base_attributes.damage,
+            self.base_attributes.effects,
+            self.base_attributes.other
+        )

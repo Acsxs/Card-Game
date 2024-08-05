@@ -7,6 +7,7 @@ class CardMessenger:
         self.card = card
         self.recipient = recipient
 
+
 class CardQueue:
     def __init__(self, queue_length):
         self.queue = [None for i in range(queue_length)]
@@ -20,6 +21,12 @@ class CardQueue:
             raise NotImplemented
         self.open.remove(position)
         self.queue[position] = CardMessenger(author, card, recipient)
+
+    def pick(self, position):
+        self.open.append(position)
+        card = self.queue[position].card
+        self.queue[position] = None
+        return card
 
     def play(self):
         for index, card_messenger in enumerate(self.queue):

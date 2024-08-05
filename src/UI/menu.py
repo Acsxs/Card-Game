@@ -9,7 +9,7 @@ class Menu:
     def __init__(self, mouse, surface, *args):
         self.surface = surface
         self.mouse = mouse
-        self.button_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), mouse, *args)
+        self.button_group = MouseTrackerGroup(mouse, *args)
 
     def update(self):
         self.button_group.update()

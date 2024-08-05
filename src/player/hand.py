@@ -9,8 +9,7 @@ class Hand:
         self.cards.append(card)
 
     def draw_slice(self, cards):
-        for card in cards:
-            self.draw(card)
+        self.cards.extend(cards)
 
     def pick(self, card_index):
         return self.cards.pop(card_index)
@@ -22,8 +21,3 @@ class Hand:
 
     def to_string(self):
         return str([card.name for card in self.cards])
-
-    def play(self, card_queue, player, card_index, target, position):
-        # print(self.cards)
-        card_queue.submit(self.cards[card_index], player, target, position)
-        return self.pick(card_index)

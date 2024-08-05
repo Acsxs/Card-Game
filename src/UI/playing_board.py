@@ -3,6 +3,7 @@ from consts import *
 
 class PlayingBoard:
     cards = CARD_SLOTS * [None]
+    locked = []
 
     def __init__(self):
         self.card_slot_surface = pygame.transform.scale(pygame.image.load("data/assets/card-slot.png"), CARD_SLOT_SIZE)
@@ -20,6 +21,7 @@ class PlayingBoard:
         for index, card in enumerate(self.cards):
             if card is None:
                 continue
+            card.change_size(CARD_SIZE)
             card.rect.topleft = self.rect.topleft[0] + CARD_POSITIONS[index][0], self.rect.topleft[1] + CARD_POSITIONS[index][1]
             card.draw(self.surface)
 
@@ -31,10 +33,17 @@ class PlayingBoard:
             if card is None:
                 continue
             if card.rect.collidepoint(mouse_pos):
+                if index in self.locked:
+                    break
                 self.cards[index] = None
-                return card
+                return index, card
+        return None, None
 
     def draw(self, surface, pos=None):
         assert pos is None
         self.update_board()
         surface.blit(self.surface, (0, 0))
+
+    def clear(self):
+        self.cards = CARD_SLOTS * [None]
+        self.locked.clear()

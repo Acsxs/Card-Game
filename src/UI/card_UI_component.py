@@ -17,7 +17,7 @@ class CardUIComponent:
 
     def update_card(self):
         # Cost Rendering
-        self.blit_text(str(self.cost), pygame.Rect(64,58,40,40), "Minecraft",40)
+        self.blit_text(str(self.cost), pygame.Rect(64, 58, 40, 40), "Minecraft", 40)
 
         # Name Rendering
         self.blit_text(self.name, pygame.Rect(115, 59, 200, 40), "Minecraft", 40)
@@ -32,7 +32,6 @@ class CardUIComponent:
     def get_surface_at_scale(self, size):
         return pygame.transform.scale(self.card, size)
 
-
     def blit_text(self, text, rect: pygame.Rect, font_name, default_size, color=pygame.Color('black')):
         words = text.split(' ')
         words = [word + ' ' for word in words]
@@ -44,14 +43,14 @@ class CardUIComponent:
             word_surfaces = [font.render(word, 0, color) for word in words]
             word_height = word_surfaces[0].get_size()[1]
             word_widths = [word_surface.get_size()[0] for word_surface in word_surfaces]
-            previous=0
-            i=sum_binary_search(word_widths, max_width)
+            previous = 0
+            i = sum_binary_search(word_widths, max_width)
             while i is not None:
                 lines.append(''.join(words[previous:i]))
                 previous = i
                 i = sum_binary_search(word_widths, max_width)
             lines.append(''.join(words[previous:]))
-            total_height = word_height*len(lines)
+            total_height = word_height * len(lines)
             if total_height <= max_height:
                 break
         x, y = rect.topleft
@@ -63,7 +62,7 @@ class CardUIComponent:
 
 
 def sum_binary_search(array, x):
-    range_ = [0, len(array)-1]
+    range_ = [0, len(array) - 1]
     result = 0
     while range_[0] <= range_[1]:
         mid = sum(range_) // 2

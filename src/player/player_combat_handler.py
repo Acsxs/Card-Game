@@ -7,14 +7,14 @@ from player.discard import Discard
 
 
 class PlayerCombatHandler:
-    starting_draw = 7
-    selected_card = None
+    draw_amount = 5
     energy = 5
     outgoing_modifiers = []
     incoming_modifiers = []
 
-    def __init__(self, card_queue, player, starting_shield=0, initial_effects=()):
+    def __init__(self, card_queue, interface, player, starting_shield=0, initial_effects=()):
         self.card_queue = card_queue
+        self.interface = interface
         self.player = player
         self.shield = starting_shield
         self.deck = Deck(copy(player.inventory.cards))
@@ -25,35 +25,40 @@ class PlayerCombatHandler:
     def start_combat(self):
         self.deck.shuffle()
         self.energy = 5
-        self.draw_slice(0, self.starting_draw - 1)
+        self.interface.register_hand_draw_slice(0, self.draw_amount - 1)
 
     def start_turn(self):
         self.shield = 0
         self.energy = 5
-        self.draw()
+        self.interface.register_hand_draw_slice(0, self.draw_amount - 1)
 
     def draw(self):
         if len(self.deck.cards) <= 0:
             self.deck.shuffle_discard(self.discard)
+        card = self.deck.pick(0)
         self.hand.draw(self.deck.pick(0))
+        return card
 
     def draw_slice(self, start, stop, step=1):
         if len(self.deck.cards) <= 0:
             self.deck.shuffle_discard(self.discard)
-        self.hand.draw_slice(self.deck.pick_slice(start, stop, step))
+        cards = self.deck.pick_slice(start, stop, step)
+        self.hand.draw_slice(cards)
+        return cards
 
-    def end_turn(self): pass
+    def end_turn(self):
+        self.discard.discard_slice(self.hand.pick_slice(0, 1e6))
 
-    def select_card(self, index):
-        self.selected_card = index
+    def pick_hand(self, index):
+        return self.hand.pick(index)
 
-    def play_card(self, target, position):
-        cost = self.send_card_attributes(self.hand.cards[self.selected_card].get_attributes()).cost
-        if self.energy - cost <=0:
+    def play_card(self, card, target, position):
+        cost = self.send_card_attributes(card.get_attributes()).cost
+        if self.energy - cost <= 0:
             return
         self.energy -= cost
-        played_card = self.hand.play(self.card_queue, self, self.selected_card, target, position)
-        self.discard.discard(played_card)
+        self.card_queue.submit(card, self, target, position)
+        self.discard.discard(card)
 
     def receive_card_attributes(self, card_attributes):
         modified_attributes = card_attributes

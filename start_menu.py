@@ -1,70 +1,165 @@
 import pygame
 import sys
-from UI.button import *
+from UI.card_UI_component import CardUIComponent
+from consts import *
+import numpy as np
+from UI.hand_UI_component import HandUIComponent
+from UI.button import Button
+from input.mouse_tracker import Mouse, MouseTrackerGroup
+from consts import *
+from functools import partial
+
+
+class Menu:
+    def __init__(self, mouse, surface, *args):
+        self.surface = surface
+        self.mouse = mouse
+        self.button_group = MouseTrackerGroup((SCREEN_WIDTH, SCREEN_HEIGHT), mouse, *args)
+
+    def update(self):
+        self.button_group.update()
+
+    def draw(self, surface):
+        surface.blit(self.surface, (0, 0))
+        self.button_group.draw(surface)
+
+    def register_button(self, button):
+        self.button_group.add(button)
+
+
+class MenuHandler:
+    def __init__(self, *args):
+
+        self.menu = None
+        self.menus = args
+        assert self.menus is not None
+        for menu in self.menus:
+            for button in menu.button_group.trackers:
+                button.command = partial(set_menu, menu)
+
+    def update(self):
+        if self.menu is None:
+            return
+        self.menu.update()
+
+    def draw(self, surface):
+        if self.menu is None:
+            return
+        self.menu.draw(surface)
+
+    def set_menu(self, menu):
+        self.menu = menu
+
+
+def get_font(size):
+    return pygame.font.SysFont('Upheaval TT -BRK-', size)
+
+
+def set_menu():
+    global current_screen
+    current_screen = "main menu"
+
+
+def set_play():
+    global current_screen
+    current_screen = "play"
+
+
+def set_options():
+    global current_screen
+    current_screen = "options"
+
+
+def set_quit():
+    pygame.quit()
+    sys.exit()
+
 
 pygame.init()
 
-# Constants
-WIDTH, HEIGHT = 1200, 600
-WHITE = (255, 255, 255)
+SCREEN = pygame.display.set_mode((1280, 720))
+pygame.display.set_caption("Menu")
 
-# Screen setup
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Start Menu Test')
+BG = pygame.image.load("data/assets/background 2.png")
 
-button_surf1 = pygame.Surface((250, 50), pygame.SRCALPHA)
-button_surf1.fill(pygame.Color(175, 175, 175))
-button_surf2 = pygame.Surface((250, 50), pygame.SRCALPHA)
-button_surf2.fill(pygame.Color(175, 175, 175))
-button_surf3 = pygame.Surface((250, 50), pygame.SRCALPHA)
-button_surf3.fill(pygame.Color(175, 175, 175))
-button_surf4 = pygame.Surface((250, 50), pygame.SRCALPHA)
-button_surf4.fill(pygame.Color(175, 175, 175))
+mouse = Mouse()
+
+play_back_image = pygame.Surface((100, 100))
+play_back_image.fill((255, 0, 0))
+PLAY_TEXT = get_font(45).render("This is the PLAY screen.", True, "Black")
+PLAY_RECT = PLAY_TEXT.get_rect(center=(500, 250))
+# play_buttons = MouseTrackerGroup(SCREEN.get_size(), mouse, PLAY_BACK)
+
+OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black")
+OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(500, 250))
+# options_buttons = MouseTrackerGroup(SCREEN.get_size(), mouse, OPTIONS_BACK)
+
+MENU_TEXT = get_font(100).render("Tower Master", True, "#b576e7")
+MENU_RECT = MENU_TEXT.get_rect(center=(650, 100))
+
+# main_menu_buttons = MouseTrackerGroup(SCREEN.get_size(), mouse, play_button, options_button, quit_button)
+BG.blit(MENU_TEXT, MENU_RECT)
+main_menu = Menu(mouse, BG)
+options_menu = Menu(mouse, BG)
+play_menu = Menu(mouse, BG)
+menu_handler = MenuHandler(main_menu)
+
+play_button = Button(pygame.image.load("data/assets/Start Button.png"), pos=(500, 250),
+                     command=partial(menu_handler.set_menu, play_menu))
+options_button = Button(pygame.image.load("data/assets/Setting Wheel.png"), pos=(1150, 580),
+                        command=partial(menu_handler.set_menu, options_menu))
+quit_button = Button(pygame.image.load("data/assets/Quit Button.png"), pos=(500, 450), command=set_quit)
+
+main_button = Button(play_back_image, pos=(500, 250), command=partial(menu_handler.set_menu, main_menu))
+
+main_menu.register_button(play_button)
+main_menu.register_button(options_button)
+main_menu.register_button(quit_button)
+
+play_menu.register_button(main_button)
+options_menu.register_button(main_button)
+
+menu_handler.set_menu(main_menu)
+
+# def play(screen):
+#     screen.fill((255, 255, 255))
+#     mouse.update()
+#     play_buttons.update()
+#     play_buttons.draw(screen)
+#     screen.blit(PLAY_TEXT, PLAY_RECT)
+#
+#
+# def options(screen):
+#     screen.fill((255, 255, 255))
+#     mouse.update()
+#     options_buttons.update()
+#     options_buttons.draw(screen)
+#     screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
+#
+#
+# def main_menu(screen):
+#     screen.blit(BG, (0, 0))
+#     mouse.update()
+#     main_menu_buttons.update()
+#     main_menu_buttons.draw(screen)
+#     screen.blit(MENU_TEXT, MENU_RECT)
 
 
-# Font setup
-font = pygame.font.SysFont('Arial', 36, bold=False)
+current_screen = "main menu"
 
-text_surface = font.render('Card Game', True, WHITE, None)
-text_rect = text_surface.get_rect(center=(WIDTH//2, 75))
-
-button_text1 = font.render('Settings', True, (0, 0, 0))
-button_text_rect1 = button_text1.get_rect(center=button_surf1.get_rect().center)
-button_surf1.blit(button_text1, button_text_rect1)
-button_text2 = font.render('Card Encyclopedia', True, (0, 0, 0))
-button_text_rect2 = button_text2.get_rect(center=button_surf2.get_rect().center)
-button_surf2.blit(button_text2, button_text_rect2)
-button_text3 = font.render('Quit', True, (0, 0, 0))
-button_text_rect3 = button_text3.get_rect(center=button_surf3.get_rect().center)
-button_surf3.blit(button_text3, button_text_rect3)
-button_text4 = font.render('Start', True, (0, 0, 0))
-button_text_rect4 = button_text4.get_rect(center=button_surf4.get_rect().center)
-button_surf4.blit(button_text4, button_text_rect4)
-
-
-button1 = Button(button_surf1, (50, 450), lambda: print("Settings"))
-button2 = Button(button_surf2, (50, 375), lambda: print("Card Encyclopedia"))
-button3 = Button(button_surf3, (50, 525), lambda: pygame.quit())
-button4 = Button(button_surf4, (50, 300), lambda: print("Start"))
-
-button_group = ButtonGroup((WIDTH, HEIGHT), button1, button2, button3, button4)
-
-# Main loop
-clock = pygame.time.Clock()
-
-running = True
-while running:
+while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            button_group.on_click(event.pos)
-    screen.fill((0, 0, 0))
-    screen.blit(text_surface, text_rect)
-    button_group.render(screen)
-
+            pygame.quit()
+            sys.exit()
+    mouse.update()
+    menu_handler.update()
+    menu_handler.draw(SCREEN)
+    # if current_screen == "main menu":
+    #     main_menu(SCREEN)
+    # if current_screen == "play":
+    #     play(SCREEN)
+    # if current_screen == "options":
+    #     options(SCREEN)
     pygame.display.flip()
 
-# Quit Pygame
-pygame.quit()
-sys.exit()

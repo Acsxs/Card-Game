@@ -7,8 +7,9 @@ from consts import *
 class PlayerUIController(MouseTrackerGroup):
     selected_card = None
 
-    def __init__(self, mouse):
+    def __init__(self, mouse, interface):
         super().__init__(mouse)
+        self.interface = interface
         self.playing_board = PlayingBoard()
         self.hand_ui = HandUIComponent()
 
@@ -16,9 +17,13 @@ class PlayerUIController(MouseTrackerGroup):
         if 0 > self.mouse.pos[0] > SCREEN_WIDTH or 0 > self.mouse.pos[1] > SCREEN_HEIGHT:
             return
         if self.hand_ui.rect.collidepoint(self.mouse.pos):
-            self.selected_card = self.hand_ui.pick_card(self.mouse.pos)
+            index, self.selected_card = self.hand_ui.pick_card(self.mouse.pos)
+            if not (index is None):
+                self.interface.register_hand_pick(index)
         elif self.playing_board.rect.collidepoint(self.mouse.pos):
-            self.selected_card = self.playing_board.pick_card(self.mouse.pos)
+            index, self.selected_card = self.playing_board.pick_card(self.mouse.pos)
+            if not (index is None):
+                self.interface.register_board_pick(index)
         if self.selected_card is None:
             return
         self.selected_card.change_size((CARD_SIZE[0] * 1.5, CARD_SIZE[1] * 1.5))
@@ -30,15 +35,18 @@ class PlayerUIController(MouseTrackerGroup):
         if self.playing_board.rect.collidepoint(self.mouse.pos):
             centres = self.playing_board.get_slot_centres()
             distances = [(x - self.mouse.pos[0], y - self.mouse.pos[1]) for x, y in centres]
-            distances = [x*x + y*y for x,y in distances]
+            distances = [x * x + y * y for x, y in distances]
             index = distances.index(min(distances))
             if self.playing_board.cards[index] is None:
+                self.interface.register_board_set(index)
                 self.playing_board.cards[index] = self.selected_card
                 self.selected_card.change_size(CARD_SIZE)
             else:
+                self.interface.register_hand_set()
                 self.hand_ui.cards.append(self.selected_card)
                 self.selected_card.change_size(HAND_CARD_SIZE)
         else:
+            self.interface.register_hand_set()
             self.hand_ui.cards.append(self.selected_card)
             self.selected_card.change_size(HAND_CARD_SIZE)
         self.selected_card = None

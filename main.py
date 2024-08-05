@@ -1,7 +1,11 @@
+import pygame
+
 from player.player import Player
 from events import EventHandler
 from cards.base_card import Card
 from combat.combat_handler import Combat
+
+pygame.init()
 
 player = Player()
 
