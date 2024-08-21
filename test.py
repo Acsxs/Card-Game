@@ -9,6 +9,10 @@ from player.player import Player
 if not pygame.get_init():
     pygame.init()
 
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Test")
+
 player = Player()
 for i in range(24):
     player.inventory.cards.append(CARDS[0].copy())
@@ -17,8 +21,6 @@ for i in range(24):
 mouse = Mouse()
 combat_interface = CombatInterface(mouse, player)
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Test")
 
 
 # indicator = StaminaIndicator(None, (100, 300), (20, 10))
@@ -36,6 +38,6 @@ while run:
     combat_interface.update_surface()
     combat_interface.draw(screen)
 
-    pygame.display.update()
+    pygame.display.flip()
 pygame.quit()
 sys.exit()

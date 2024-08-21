@@ -32,8 +32,14 @@ class Enemy:
         self.interface.enemy_set_card(card, position)
 
     def start_combat(self, player):
-        for i in range(random.randint(0, 3)):
+        self.start_turn(player)
+
+    def start_turn(self, player):
+        self.shield = 0
+        for i in range(random.randint(1, 3)):
             self.submit_intent(player)
+
+    def end_turn(self, player): pass
 
     def receive_card_attributes(self, card_attributes):
         modified_attributes = card_attributes

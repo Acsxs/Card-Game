@@ -52,6 +52,10 @@ class PlayerCombatHandler:
     def pick_hand(self, index):
         return self.hand.pick(index)
 
+    def return_card(self, card):
+        self.energy += card.get_attributes().energy
+        self.hand.cards.append(card)
+
     def play_card(self, card, target, position):
         cost = self.send_card_attributes(card.get_attributes()).cost
         if self.energy - cost <= 0:

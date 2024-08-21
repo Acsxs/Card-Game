@@ -17,13 +17,9 @@ class PlayerUIController(MouseTrackerGroup):
         if 0 > self.mouse.pos[0] > SCREEN_WIDTH or 0 > self.mouse.pos[1] > SCREEN_HEIGHT:
             return
         if self.hand_ui.rect.collidepoint(self.mouse.pos):
-            index, self.selected_card = self.hand_ui.pick_card(self.mouse.pos)
-            if not (index is None):
-                self.interface.register_hand_pick(index)
+            self.interface.register_hand_pick(self.hand_ui.get_index(self.mouse.pos))
         elif self.playing_board.rect.collidepoint(self.mouse.pos):
-            index, self.selected_card = self.playing_board.pick_card(self.mouse.pos)
-            if not (index is None):
-                self.interface.register_board_pick(index)
+            self.interface.register_hand_pick(self.playing_board.get_index(self.mouse.pos))
         if self.selected_card is None:
             return
         self.selected_card.change_size((CARD_SIZE[0] * 1.5, CARD_SIZE[1] * 1.5))
@@ -43,12 +39,12 @@ class PlayerUIController(MouseTrackerGroup):
                 self.selected_card.change_size(CARD_SIZE)
             else:
                 self.interface.register_hand_set()
-                self.hand_ui.cards.append(self.selected_card)
                 self.selected_card.change_size(HAND_CARD_SIZE)
+                self.hand_ui.cards.append(self.selected_card)
         else:
             self.interface.register_hand_set()
-            self.hand_ui.cards.append(self.selected_card)
             self.selected_card.change_size(HAND_CARD_SIZE)
+            self.hand_ui.cards.append(self.selected_card)
         self.selected_card = None
 
     def on_hold(self):

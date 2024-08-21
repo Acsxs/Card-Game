@@ -20,13 +20,16 @@ class HandUIComponent:
             card.rect.topleft = card_offset * index + self.rect.topleft
             card.draw(self.surface)
 
-    def pick_card(self, mouse_pos):
-        for index, card in enumerate(reversed(self.cards)):
-            print(card.rect)
+    def pick_card(self, index):
+        card = self.cards[index]
+        self.cards.remove(card)
+        return card
+
+    def get_index(self, mouse_pos):
+        for index, card in reversed(list(enumerate(self.cards))):
             if card.rect.collidepoint(*mouse_pos):
-                self.cards.remove(card)
-                return index, card
-        return None, None
+                return index
+        return None
 
     def draw(self, surface, pos=None):
         assert pos is None
