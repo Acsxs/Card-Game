@@ -48,7 +48,13 @@ class CardUIComponent:
             while i is not None:
                 lines.append(''.join(words[previous:i]))
                 previous = i
-                i = sum_binary_search(word_widths, max_width)
+                if sum(word_widths)>max_width:
+                    i = sum_binary_search(word_widths, max_width)
+                else:
+                    lines.append(''.join(words[previous:-1]))
+                    break
+                word_widths = word_widths[i:-1]
+
             lines.append(''.join(words[previous:]))
             total_height = word_height * len(lines)
             if total_height <= max_height:
@@ -72,4 +78,5 @@ def sum_binary_search(array, x):
             range_[0] = mid + 1
             continue
         range_[1] = mid - 1
+        # print(range_)
     return
