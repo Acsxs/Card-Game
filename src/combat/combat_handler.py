@@ -15,7 +15,10 @@ class Combat:
         self.enemy.start_combat(self.player)
 
     def start_turn(self):
+        self.enemy.start_turn(self.player)
         self.player.start_turn()
 
     def end_turn(self):
         self.player.end_turn()
+        self.enemy.end_turn(self.player)
+        self.card_queue.play()

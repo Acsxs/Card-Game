@@ -24,12 +24,12 @@ class Mouse:
             if current_button == 3 and button_state is True:
                 continue
             if self.button_hold_timers[index] is not None:
-                if 1e-6 < current_time-self.button_hold_timers[index] < 0.15 and button_state is True:
+                if 1e-6 < current_time - self.button_hold_timers[index] < 0.15 and button_state is True:
                     self.button_states[index] = 0
                     continue
                 elif button_state is False:
                     self.button_states[index] = 2
-                    self.button_hold_timers[index]=None
+                    self.button_hold_timers[index] = None
                     continue
                 if current_button == 0 and button_state is True and current_time - self.button_hold_timers[index] >= 0.15:
                     self.button_states[index] = 3
@@ -45,10 +45,6 @@ class Mouse:
             if current_button == 1 or current_button == 2:
                 self.button_states[index] = 0
                 continue
-
-
-
-
 
 
 class MouseTracker:
@@ -101,16 +97,18 @@ class MouseTrackerGroup:
         if self.hover is not None:
             return self.hover.on_mouse_down()
 
-
     def on_mouse_up(self):
         if self.hover is not None:
             self.hover.on_mouse_up()
 
     def check_hover(self, mouse_pos):
         if 0 > mouse_pos[0] > self.size[0] or 0 > mouse_pos[1] > self.size[1]:
-            if self.mask.get_at(mouse_pos) == 0:
-                self.hover = None
-                return
+            self.hover = None
+            return
+
+        if self.mask.get_at(mouse_pos) == 0:
+            self.hover = None
+            return
 
         for tracker in self.trackers:
             if tracker.rect.collidepoint(*mouse_pos):
@@ -134,3 +132,4 @@ class MouseTrackerGroup:
     def draw(self, surface):
         for tracker in self.trackers:
             tracker.draw(surface)
+        # surface.blit(self.mask.to_surface(),(0,0))
