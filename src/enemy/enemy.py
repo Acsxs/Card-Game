@@ -9,8 +9,7 @@ class Enemy:
     outgoing_modifiers = []
     incoming_modifiers = []
 
-    def __init__(self, card_queue, interface, health, initial_shield=0, initial_effects=()):
-        self.interface = interface
+    def __init__(self, card_queue, health, initial_shield=0, initial_effects=()):
         self.health = health
         self.shield = initial_shield
         self.effects = EffectEnum(initial_effects)
@@ -29,7 +28,6 @@ class Enemy:
             card = CARDS[-1].copy()
         position = random.choice(self.card_queue.open)
         self.card_queue.submit(card, self, player, position)
-        self.interface.enemy_set_card(card, position)
 
     def start_combat(self, player):
         self.start_turn(player)
