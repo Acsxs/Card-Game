@@ -22,15 +22,13 @@ class Enemy:
         if len(self.card_queue.open) <= 0:
             return
 
+        position = random.choice(self.card_queue.open)
         if self.get_intent() == 'attack':
             card = CARDS[-2].copy()
+            self.card_queue.submit(card, self, player, position)
         else:
             card = CARDS[-1].copy()
-        position = random.choice(self.card_queue.open)
-        self.card_queue.submit(card, self, player, position)
-
-    def start_combat(self, player):
-        self.start_turn(player)
+            self.card_queue.submit(card, self, self, position)
 
     def start_turn(self, player):
         self.shield = 0

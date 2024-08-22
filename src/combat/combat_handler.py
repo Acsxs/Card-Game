@@ -8,11 +8,10 @@ class Combat:
     def __init__(self, player):
         self.card_queue = CardQueue(CARD_SLOTS)
         self.player = PlayerCombatHandler(self.card_queue,  player)
-        self.enemy = Enemy(self.card_queue, 15)
+        self.enemy = Enemy(self.card_queue, 5)
 
     def start_combat(self):
         self.player.start_combat()
-        self.enemy.start_combat(self.player)
 
     def start_turn(self):
         self.enemy.start_turn(self.player)
