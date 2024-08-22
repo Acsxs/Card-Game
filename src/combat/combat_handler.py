@@ -5,10 +5,10 @@ from consts import CARD_SLOTS
 
 
 class Combat:
-    def __init__(self, interface, player):
+    def __init__(self, player):
         self.card_queue = CardQueue(CARD_SLOTS)
-        self.player = PlayerCombatHandler(self.card_queue, interface, player)
-        self.enemy = Enemy(self.card_queue, interface, 15)
+        self.player = PlayerCombatHandler(self.card_queue,  player)
+        self.enemy = Enemy(self.card_queue, 15)
 
     def start_combat(self):
         self.player.start_combat()

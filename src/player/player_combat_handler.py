@@ -12,9 +12,8 @@ class PlayerCombatHandler:
     outgoing_modifiers = []
     incoming_modifiers = []
 
-    def __init__(self, card_queue, interface, player, starting_shield=0, initial_effects=()):
+    def __init__(self, card_queue, player, starting_shield=0, initial_effects=()):
         self.card_queue = card_queue
-        self.interface = interface
         self.player = player
         self.shield = starting_shield
         self.deck = Deck(copy(player.inventory.cards))
@@ -25,12 +24,10 @@ class PlayerCombatHandler:
     def start_combat(self):
         self.deck.shuffle()
         self.energy = 5
-        self.interface.register_hand_draw_slice(0, self.draw_amount - 1)
 
     def start_turn(self):
         self.shield = 0
         self.energy = 5
-        self.interface.register_hand_draw_slice(0, self.draw_amount - 1)
 
     def draw(self):
         if len(self.deck.cards) <= 0:
@@ -41,6 +38,7 @@ class PlayerCombatHandler:
 
     def draw_slice(self, start, stop, step=1):
         if len(self.deck.cards) <= 0:
+            if len(self.discard.cards) <= 0: return
             self.deck.shuffle_discard(self.discard)
         cards = self.deck.pick_slice(start, stop, step)
         self.hand.draw_slice(cards)
