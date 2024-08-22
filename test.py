@@ -21,11 +21,6 @@ for i in range(24):
 mouse = Mouse()
 combat_interface = CombatInterface(mouse, player)
 
-
-
-# indicator = StaminaIndicator(None, (100, 300), (20, 10))
-# indicator.update_surf((50, 50))
-# rect = pygame.Rect(40, 297, 300, 120)
 combat_interface.combat.start_combat()
 run = True
 while run:
