@@ -1,42 +1,38 @@
-import pygame
+import sys
 
+from cards.card_def import *
+from combat_interface import CombatInterface
+from consts import *
+from input.mouse_tracker import Mouse
 from player.player import Player
-from events import EventHandler
-from cards.base_card import Card
-from combat.combat_handler import Combat
 
-pygame.init()
+if not pygame.get_init():
+    pygame.init()
+
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Test")
 
 player = Player()
+for i in range(24):
+    player.inventory.cards.append(CARDS[0].copy())
+    player.inventory.cards.append(CARDS[1].copy())
 
-event_handler = EventHandler()
-#test
+mouse = Mouse()
+combat_interface = CombatInterface(mouse, player)
 
-card1 = Card("Attack", 1, 0, 0, 4)
-card2 = Card("Defence", 1, 4, 0, 0)
+combat_interface.combat.start_combat()
+run = True
+while run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+    screen.fill((255, 255, 255))
+    mouse.update()
+    combat_interface.update()
+    combat_interface.update_surface()
+    combat_interface.draw(screen)
 
-player.inventory.cards.append(card1)
-player.inventory.cards.append(card1)
-player.inventory.cards.append(card1)
-player.inventory.cards.append(card1)
-player.inventory.cards.append(card2)
-player.inventory.cards.append(card2)
-player.inventory.cards.append(card2)
-player.inventory.cards.append(card2)
-
-combat = Combat(player)
-
-
-while combat.enemy.health > 0:
-    print(f"Player Health: {combat.player.player.health}")
-    print(f"Enemy Health: {combat.enemy.health}")
-    combat.start_combat()
-    combat.start_turn()
-    while input("End Turn?  ").lower() == 'no':
-        print(f"Energy: {combat.player.energy}")
-        combat.player.select_card(int(input("Choose card by index\n"+combat.player.hand.to_string())))
-        combat.player.play_card(combat.enemy, int(input("Choose position\n"+combat.card_queue.to_string())))
-    combat.card_queue.play()
-
-print("You Win")
-
+    pygame.display.flip()
+pygame.quit()
+sys.exit()
